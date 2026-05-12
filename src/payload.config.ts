@@ -1,4 +1,4 @@
-import { lexicalEditor } from '@payloadcms/db-postgres'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
@@ -18,20 +18,18 @@ export default buildConfig({
     },
   },
   collections: [Users, Media],
-  editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   cors: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   csrf: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
-  secret: process.env.PAYLOAD_SECRET!,
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   db: postgresAdapter({
     blocksAsJSON: true,
     readReplicas: [
       process.env.NEON_READ_REPLICA_URI_1!,
-      process.env.NEON_READ_REPLICA_URI_2!
+      process.env.NEON_READ_REPLICA_URI_2!,
       process.env.NEON_READ_REPLICA_URI_3!
     ],
     pool: {
