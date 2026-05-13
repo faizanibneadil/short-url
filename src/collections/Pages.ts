@@ -66,6 +66,9 @@ export const Pages: CollectionConfig<'pages'> = {
                     },
                     fields: [
                         MetaTitleField({
+                            overrides: {
+
+                            },
                             // if the `generateTitle` function is configured
                             hasGenerateFn: true,
                         }),
@@ -93,7 +96,7 @@ export const Pages: CollectionConfig<'pages'> = {
                             titlePath: 'meta.title',
                             descriptionPath: 'meta.description',
                             imagePath: 'meta.image',
-                        })
+                        }),
                     ]
                 },
                 {

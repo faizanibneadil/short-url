@@ -6,6 +6,7 @@ import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 import { Metadata } from 'next';
+import { getServerSideURL } from '@/utilities/getURL';
 
 export async function generateMetadata(props: {
     params: Params,
@@ -24,9 +25,25 @@ export async function generateMetadata(props: {
         }
     }
 
+    const __home = page.slug === 'home'
+    const __baseURL = getServerSideURL()
+
     return {
         title: page?.meta?.title,
-        description: page?.meta?.description
+        description: page?.meta?.description,
+        metadataBase: new URL(__baseURL),
+        alternates: {
+            canonical: __home ? __baseURL : `${__baseURL}/pages/${page.slug}`,
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: page?.meta?.title || '',
+            description: page?.meta?.description || '',
+        },
     }
 
 }
