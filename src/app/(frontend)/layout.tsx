@@ -22,7 +22,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     <html lang="en">
       <body className={cn(outfit.variable, 'antialiased')}>
         <div className="relative w-full">
-          <div className="flex h-screen flex-col items-center justify-center gap-10">
+          <div className="flex h-svh flex-col items-center justify-center gap-10">
             <div className="flex items-center gap-2">
               <main>{children}</main>
             </div>

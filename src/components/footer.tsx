@@ -19,7 +19,7 @@ type FooterLinkGroup = {
 export function StickyFooter() {
     return (
         <footer
-            className="relative h-(--footer-height) w-full border-t [--footer-height:520px]"
+            className="relative h-(--footer-height) w-full border-t [--footer-height:520px] font-(family-name:--font-outfit)"
             style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
         >
             <div className="fixed bottom-0 h-(--footer-height) w-full">

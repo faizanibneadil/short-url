@@ -301,7 +301,7 @@ export interface Url {
   /**
    * Auto generated short slug
    */
-  shortURL: string;
+  shortURL?: string | null;
   updatedAt: string;
   createdAt: string;
 }

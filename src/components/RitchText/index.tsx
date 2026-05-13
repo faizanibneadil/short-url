@@ -15,6 +15,7 @@ import {
 } from '@payloadcms/richtext-lexical/react'
 
 
+
 type NodeTypes =
     | DefaultNodeTypes
     | SerializedBlockNode<TURLShortenerPropType>
@@ -61,6 +62,7 @@ export const RichText: React.FC<Props> = (props) => {
         inlineBlocks,
         ...rest
     } = props
+
     return (
         <ConvertRichText
             converters={jsxConverters({ params, searchParams, blocks, inlineBlocks })}

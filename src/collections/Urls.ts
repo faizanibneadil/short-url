@@ -55,7 +55,6 @@ export const URLs: CollectionConfig<'urls'> = {
             type: 'text',
             name: 'shortURL',
             label: 'Short URL',
-            required: true,
             unique: true,
             index: true,
 

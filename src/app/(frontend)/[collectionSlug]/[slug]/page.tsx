@@ -5,6 +5,31 @@ import { Params, SearchParams } from '@/types';
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
 import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
+import { Metadata } from 'next';
+
+export async function generateMetadata(props: {
+    params: Params,
+    searchParams: SearchParams
+}): Promise<Metadata> {
+    const [params, searchParams] = await Promise.all([props.params, props.searchParams])
+
+    const page = await queryPageBySlug({
+        slug: params.slug
+    })
+
+    if (!page) {
+        return {
+            title: '404 - Page Not Found',
+            description: '404 - Page Not Found'
+        }
+    }
+
+    return {
+        title: page?.meta?.title,
+        description: page?.meta?.description
+    }
+
+}
 
 export default async function Page(props: {
     params: Params,
@@ -15,7 +40,7 @@ export default async function Page(props: {
         slug: params.slug
     })
     return <div className={cn({
-        "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit)": true,
+        "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full": true,
         "max-w-2xl mx-auto": page?.settings?.enableContainer
     })}>
         <RichText
@@ -23,7 +48,12 @@ export default async function Page(props: {
             params={params}
             searchParams={searchParams}
             blocks={{
-                urlShortener: ({ node }) => <div>URL Shortener</div>
+                urlShortener: ({ node }) => {
+                    const URLShortener = dynamic(() => import('@/blocks/URLShortener/component').then(({ URLShortener }) => ({
+                        default: URLShortener
+                    })))
+                    return <URLShortener blockProps={node.fields} params={params} searchParams={searchParams} />
+                }
             }}
             inlineBlocks={{
                 comicText: ({ node }) => <div>Comic Text</div>,
