@@ -40,7 +40,7 @@ export async function generateMetadata(props: {
         },
         metadataBase: new URL(__baseURL),
         alternates: {
-            canonical: __home ? __baseURL : `${__baseURL}/pages/${page.slug}`,
+            canonical: __home ? __baseURL : new URL(`/pages/${page.slug}`, __baseURL),
         },
         robots: {
             index: true,
