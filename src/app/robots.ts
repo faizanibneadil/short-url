@@ -4,7 +4,7 @@ import { getServerSideURL } from '@/utilities/getURL'
 import type { MetadataRoute } from 'next'
 
 export default function robots(): MetadataRoute.Robots {
-    const url = getServerSideURL()
+    const __baseURL = getServerSideURL()
 
     return {
         rules: [
@@ -15,7 +15,7 @@ export default function robots(): MetadataRoute.Robots {
             },
         ],
 
-        sitemap: `${url}/sitemap.xml`,
-        host: url,
+        sitemap: `${__baseURL}/sitemap.xml`,
+        host: __baseURL,
     }
 }
