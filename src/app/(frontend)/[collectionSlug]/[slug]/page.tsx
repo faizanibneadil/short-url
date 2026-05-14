@@ -56,10 +56,111 @@ export default async function Page(props: {
     const page = await queryPageBySlug({
         slug: params.slug
     })
+
+    const schema = {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        name: "DevSlix URL Shortener",
+        applicationCategory: "BusinessApplication",
+        operatingSystem: "Web",
+        url: "https://short.devslix.com",
+        description:
+            "Free URL shortener to create short links, custom URLs, and track analytics.",
+        offers: {
+            "@type": "Offer",
+            price: "0",
+            priceCurrency: "USD",
+        },
+        creator: {
+            "@type": "Organization",
+            name: "DevSlix",
+        },
+    };
+    const organizationSchema = {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: "DevSlix",
+        url: "https://devslix.com",
+        logo: "https://short.devslix.com/logo.png",
+        // sameAs: [
+        //     "https://twitter.com/yourusername",
+        //     "https://github.com/yourusername",
+        //     "https://linkedin.com/in/yourusername",
+        // ],
+    };
+
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: "DevSlix URL Shortener",
+        url: "https://short.devslix.com",
+        // potentialAction: {
+        //     "@type": "SearchAction",
+        //     target:
+        //         "https://short.devslix.com/search?q={search_term_string}",
+        //     "query-input": "required name=search_term_string",
+        // },
+    };
+
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: [
+            {
+                "@type": "Question",
+                name: "What is DevSlix URL Shortener?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "DevSlix is a free URL shortener that helps users create short and trackable links.",
+                },
+            },
+            {
+                "@type": "Question",
+                name: "Can I create custom short URLs?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, DevSlix allows users to create custom branded short links.",
+                },
+            },
+            {
+                "@type": "Question",
+                name: "Does DevSlix provide analytics?",
+                acceptedAnswer: {
+                    "@type": "Answer",
+                    text: "Yes, you can track clicks and link performance using built-in analytics.",
+                },
+            },
+        ],
+    };
+
     return <div className={cn({
         "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full p-4": true,
         "max-w-2xl mx-auto": page?.settings?.enableContainer
     })}>
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify(schema),
+            }}
+        />
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify(organizationSchema),
+            }}
+        />
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify(websiteSchema),
+            }}
+        />
+        <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify(faqSchema),
+            }}
+        />
         <RichText
             data={page?.content as DefaultTypedEditorState}
             params={params}
