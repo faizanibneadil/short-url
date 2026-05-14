@@ -3,6 +3,7 @@ import '@/styles/globals.css'
 import { StickyFooter } from '@/components/footer'
 import { Outfit } from 'next/font/google'
 import { cn } from '@/lib/utils'
+import { GoogleTagManager } from '@next/third-parties/google'
 
 export const metadata = {
   description: 'A blank template using Payload in a Next.js app.',
@@ -20,6 +21,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
 
   return (
     <html lang="en">
+      <GoogleTagManager gtmId="GTM-5HP8ZQMR" />
       <body className={cn(outfit.variable, 'antialiased')}>
         <div className="relative w-full">
           <div className="flex h-svh flex-col items-center justify-center gap-10">
