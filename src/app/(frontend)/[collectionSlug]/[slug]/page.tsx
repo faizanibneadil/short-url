@@ -32,11 +32,10 @@ export async function generateMetadata(props: {
         title: page?.meta?.title,
         description: page?.meta?.description,
         openGraph: {
-            title: "DevSlix URL Shortener | Free Short Links & Analytics",
-            description:
-                "Create short, clean, and trackable links instantly with DevSlix URL Shortener.",
+            title: page?.meta?.title || '',
+            description: page?.meta?.description || '',
             url: "https://short.devslix.com",
-            siteName: "DevSlix",
+            siteName: "Short by DevSlix",
             type: "website",
         },
         metadataBase: new URL(__baseURL),
