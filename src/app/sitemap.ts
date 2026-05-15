@@ -12,16 +12,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         pagination: false,
         draft: false,
         select: {
+            settings: {
+                enableSitemap: true,
+            },
             slug: true,
             updatedAt: true
         }
     })
 
+    const sitemap: MetadataRoute.Sitemap = []
 
-    return pages?.docs.length === 0 ? [] : pages?.docs?.map(page => ({
-        url: page?.slug === 'home' ? __baseURL : new URL(`/pages/${page?.slug}`, __baseURL).toString(),
-        priority: page?.slug === 'home' ? 1 : 0.8,
-        changeFrequency: 'yearly',
-        lastModified: page?.updatedAt,
-    }))
+    for (const { slug, updatedAt, settings } of (pages.docs ?? [])) {
+        if (settings?.enableSitemap) {
+            sitemap.push({
+                url: slug === 'home' ? __baseURL : new URL(`/pages/${slug}`, __baseURL).toString(),
+                priority: slug === 'home' ? 1 : 0.8,
+                changeFrequency: 'yearly',
+                lastModified: updatedAt,
+            })
+        }
+    }
+
+
+    return sitemap
 }
