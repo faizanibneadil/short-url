@@ -97,6 +97,25 @@ export const Pages: CollectionConfig<'pages'> = {
                             descriptionPath: 'meta.description',
                             imagePath: 'meta.image',
                         }),
+                        {
+                            type: 'group',
+                            fields: [
+                                {
+                                    type: 'row',
+                                    fields: [
+                                        {
+                                            type: 'checkbox',
+                                            name: 'enableSitemap',
+                                            label: 'Enable Sitemap',
+                                            defaultValue: true,
+                                            admin: {
+                                                description: 'Enable Sitemap of the page.'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -133,15 +152,6 @@ export const Pages: CollectionConfig<'pages'> = {
                                         description: 'Enable Container of the page.'
                                     }
                                 },
-                                {
-                                    type: 'checkbox',
-                                    name: 'enableSitemap',
-                                    label: 'Enable Sitemap',
-                                    defaultValue: true,
-                                    admin: {
-                                        description: 'Enable Sitemap of the page.'
-                                    }
-                                }
                             ]
                         }
                     ],

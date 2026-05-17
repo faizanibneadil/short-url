@@ -220,6 +220,10 @@ export interface Page {
      * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
      */
     image?: (number | null) | Media;
+    /**
+     * Enable Sitemap of the page.
+     */
+    enableSitemap?: boolean | null;
   };
   /**
    * Manage your page settings like paddings, margins etc.
@@ -237,10 +241,6 @@ export interface Page {
      * Enable Container of the page.
      */
     enableContainer?: boolean | null;
-    /**
-     * Enable Sitemap of the page.
-     */
-    enableSitemap?: boolean | null;
   };
   /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
@@ -455,6 +455,7 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         image?: T;
+        enableSitemap?: T;
       };
   settings?:
     | T
@@ -462,7 +463,6 @@ export interface PagesSelect<T extends boolean = true> {
         enableHeader?: T;
         enableFooter?: T;
         enableContainer?: T;
-        enableSitemap?: T;
       };
   generateSlug?: T;
   slug?: T;

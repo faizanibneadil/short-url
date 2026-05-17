@@ -12,8 +12,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         pagination: false,
         draft: false,
         select: {
-            settings: {
-                enableSitemap: true,
+            meta: {
+                enableSitemap: true
             },
             slug: true,
             updatedAt: true
@@ -22,8 +22,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const sitemap: MetadataRoute.Sitemap = []
 
-    for (const { slug, updatedAt, settings } of (pages.docs ?? [])) {
-        if (settings?.enableSitemap) {
+    for (const { slug, updatedAt, meta } of (pages.docs ?? [])) {
+        if (meta?.enableSitemap) {
             sitemap.push({
                 url: slug === 'home' ? __baseURL : new URL(`/pages/${slug}`, __baseURL).toString(),
                 priority: slug === 'home' ? 1 : 0.8,
