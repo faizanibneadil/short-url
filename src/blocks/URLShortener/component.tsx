@@ -14,7 +14,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { canUseDOM } from "@/utilities/canUseDOM";
-import { getClientSideURL } from "@/utilities/getURL";
+import { formatShortURL, getClientSideURL } from "@/utilities/getURL";
 
 
 export const URLShortener: React.FC<{ blockProps: TURLShortenerPropType } & { params: Awaited<Params>, searchParams: Awaited<SearchParams> }> = (props) => {
@@ -102,11 +102,11 @@ export const URLShortener: React.FC<{ blockProps: TURLShortenerPropType } & { pa
                 {URLState?.shortURL && (
                     <div className="flex items-center justify-between gap-2 text-sm h-4 py-6 px-2">
                         {/* <span>URL:</span> */}
-                        <Badge variant='secondary' render={<Link className=" font-bold" href={`${getClientSideURL()}/short/${URLState.shortURL}`}>{getClientSideURL()}/short/{URLState?.shortURL}</Link>} />
+                        <Badge variant='secondary' render={<Link className=" font-bold" href={formatShortURL(URLState?.shortURL)}>{formatShortURL(URLState?.shortURL)}</Link>} />
                         <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => onCopy(`${getClientSideURL()}/short/${URLState?.shortURL}`)}
+                            onClick={() => onCopy(formatShortURL(URLState?.shortURL!))}
                         >
                             {isCopying
                                 ? 'Copying ...'

@@ -30,3 +30,7 @@ export const getClientSideURL = () => {
 
   return process.env.NEXT_PUBLIC_SERVER_URL || ''
 }
+
+export const formatShortURL = (shortURL: string) => {
+  return `${getClientSideURL()}/s/${shortURL}`
+}
