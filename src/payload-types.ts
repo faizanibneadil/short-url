@@ -213,7 +213,7 @@ export interface Page {
   /**
    * SEO your page here.
    */
-  meta?: {
+  meta: {
     title?: string | null;
     description?: string | null;
     /**
@@ -223,7 +223,9 @@ export interface Page {
     /**
      * Enable Sitemap of the page.
      */
-    enableSitemap?: boolean | null;
+    enableSitemap: boolean;
+    changeFrequency?: ('yearly' | 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'never') | null;
+    priority?: number | null;
   };
   /**
    * Manage your page settings like paddings, margins etc.
@@ -456,6 +458,8 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
         enableSitemap?: T;
+        changeFrequency?: T;
+        priority?: T;
       };
   settings?:
     | T

@@ -108,8 +108,41 @@ export const Pages: CollectionConfig<'pages'> = {
                                             name: 'enableSitemap',
                                             label: 'Enable Sitemap',
                                             defaultValue: true,
+                                            required: true,
                                             admin: {
                                                 description: 'Enable Sitemap of the page.'
+                                            }
+                                        },
+                                    ]
+                                },
+                                {
+                                    type: 'row',
+                                    fields: [
+                                        {
+                                            type: 'select',
+                                            name: 'changeFrequency',
+                                            label: 'Change Frequency',
+                                            required: true,
+                                            defaultValue: "yearly",
+                                            options: ["yearly", "always", "hourly", "daily", "weekly", "monthly", "never"].map(o => ({
+                                                label: o.at(0)?.toLowerCase() + o.slice(1),
+                                                value: o
+                                            })),
+                                            admin: {
+                                                condition: (_, { enableSitemap }) => enableSitemap
+                                            }
+                                        },
+                                        {
+                                            type: 'number',
+                                            name: 'priority',
+                                            label: 'Priority',
+                                            required: true,
+                                            defaultValue: 1,
+                                            min: 0,
+                                            max: 1,
+                                            admin: {
+                                                step: 0.1,
+                                                condition: (_, { enableSitemap }) => enableSitemap
                                             }
                                         }
                                     ]

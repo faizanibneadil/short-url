@@ -26,8 +26,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         if (meta?.enableSitemap) {
             sitemap.push({
                 url: slug === 'home' ? __baseURL : new URL(`/pages/${slug}`, __baseURL).toString(),
-                priority: slug === 'home' ? 1 : 0.8,
-                changeFrequency: 'yearly',
+                priority: meta.priority ?? undefined,
+                changeFrequency: meta.changeFrequency ?? undefined,
                 lastModified: updatedAt,
             })
         }
