@@ -51,14 +51,8 @@ export default buildConfig({
       ]
     }
   }),
-  cors: [
-    process.env.NEXT_PUBLIC_SERVER_URL!,
-    process.env.SHORT_SERVICE_SERVER_URL!,
-  ].filter(Boolean),
-  csrf: [
-    process.env.NEXT_PUBLIC_SERVER_URL!,
-    process.env.SHORT_SERVICE_SERVER_URL!,
-  ].filter(Boolean),
+  cors: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  csrf: [process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   db: postgresAdapter({
     blocksAsJSON: true,
