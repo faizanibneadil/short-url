@@ -16,7 +16,7 @@ export const SSOStrategy: AuthStrategy = {
             const response = await fetch('https://auth.devslix.com/api/users/verify-session', {
                 credentials: 'include'
             })
-
+            console.log({ response: await response.json() })
             if (!response.ok) return { user: null }
             const session = await response.json() // { authenticated: true, user: { email, name } }
 
