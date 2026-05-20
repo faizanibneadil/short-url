@@ -14,7 +14,7 @@ export const SSOStrategy: AuthStrategy = {
         try {
             // 1. Shared cookie ko direct central auth server par bhej kar check karein
             const response = await fetch('https://auth.devslix.com/api/users/verify-session', {
-                headers: { Cookie: cookieHeader },
+                credentials: 'include'
             })
 
             if (!response.ok) return { user: null }
