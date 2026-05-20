@@ -7,20 +7,31 @@ export const SSOStrategy: AuthStrategy = {
 
         // Check karein kya central payload token browser ki cookie me maujood hai
         // Payload default token ka naam 'payload-token' rakhta hai
-        // if (!cookieHeader.includes('payload-token')) {
-        //     return { user: null }
-        // }
-        console.log({ cookieHeader })
+        if (!cookieHeader.includes('payload-token')) {
+            return { user: null }
+        }
+        console.log("Cookie found on consumer server:", { cookieHeader })
         try {
             // 1. Shared cookie ko direct central auth server par bhej kar check karein
+            // 1. Cookie ko MANUAL headers me daal kar central server pr bhejein
             const response = await fetch('https://auth.devslix.com/api/users/verify-session', {
-                credentials: 'include'
+                method: 'GET',
+                headers: {
+                    'Cookie': cookieHeader, // Yeh line cookie central server tak pahonchaye gi
+                    'Content-Type': 'application/json',
+                },
+                cache: 'no-store' // Cache disable karna lazmi hai taake stale data na aaye
             })
-            console.log({ response: await response.json() })
-            if (!response.ok) return { user: null }
-            const session = await response.json() // { authenticated: true, user: { email, name } }
+            if (!response.ok) {
+                console.log("Central auth responded with error status:", response.status)
+                return { user: null }
+            }
+            const session = await response.json()
+            console.log("Central auth session response:", session)
 
-            if (!session.authenticated) return { user: null }
+            if (!session || !session.authenticated || !session.user) {
+                return { user: null }
+            }
 
             // 2. Local Database me check karein kya yeh user pehle se exist karta hai?
             const localUsers = await payload.find({
