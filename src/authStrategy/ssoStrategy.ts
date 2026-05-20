@@ -7,10 +7,10 @@ export const SSOStrategy: AuthStrategy = {
 
         // Check karein kya central payload token browser ki cookie me maujood hai
         // Payload default token ka naam 'payload-token' rakhta hai
-        if (!cookieHeader.includes('payload-token')) {
-            return { user: null }
-        }
-
+        // if (!cookieHeader.includes('payload-token')) {
+        //     return { user: null }
+        // }
+        console.log({ cookieHeader })
         try {
             // 1. Shared cookie ko direct central auth server par bhej kar check karein
             const response = await fetch('https://auth.devslix.com/api/users/verify-session', {
