@@ -98,6 +98,15 @@ export const Pages: CollectionConfig<'pages'> = {
                             imagePath: 'meta.image',
                         }),
                         {
+                            type: 'text',
+                            name: 'keywords',
+                            label: 'Keywords',
+                            hasMany: true,
+                            admin: {
+                                description: 'The Web page keywords for search.'
+                            }
+                        },
+                        {
                             type: 'group',
                             fields: [
                                 {

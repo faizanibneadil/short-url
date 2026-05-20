@@ -31,6 +31,7 @@ export async function generateMetadata(props: {
     return {
         title: page?.meta?.title,
         description: page?.meta?.description,
+        keywords: page?.meta?.keywords,
         openGraph: {
             title: page?.meta?.title || '',
             description: page?.meta?.description || '',
@@ -39,6 +40,10 @@ export async function generateMetadata(props: {
             type: "website",
         },
         metadataBase: new URL(__baseURL),
+        authors: {
+            name: 'DevSlix',
+            url: 'https://devslix.com'
+        },
         alternates: {
             canonical: __home ? __baseURL : new URL(`/pages/${page.slug}`, __baseURL),
         },

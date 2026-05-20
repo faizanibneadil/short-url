@@ -221,6 +221,10 @@ export interface Page {
      */
     image?: (number | null) | Media;
     /**
+     * The Web page keywords for search.
+     */
+    keywords?: string[] | null;
+    /**
      * Enable Sitemap of the page.
      */
     enableSitemap: boolean;
@@ -457,6 +461,7 @@ export interface PagesSelect<T extends boolean = true> {
         title?: T;
         description?: T;
         image?: T;
+        keywords?: T;
         enableSitemap?: T;
         changeFrequency?: T;
         priority?: T;
