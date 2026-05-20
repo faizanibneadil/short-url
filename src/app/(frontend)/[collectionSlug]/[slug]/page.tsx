@@ -7,6 +7,8 @@ import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
 import { Metadata } from 'next';
 import { getServerSideURL } from '@/utilities/getURL';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export async function generateMetadata(props: {
     params: Params,
@@ -173,6 +175,7 @@ export default async function Page(props: {
                 __html: JSON.stringify(faqSchema),
             }}
         />
+        <Button nativeButton={false} render={<Link href='https://auth.devslix.com/admin/login' />}>Login</Button>
         <RichText
             data={page?.content as DefaultTypedEditorState}
             params={params}

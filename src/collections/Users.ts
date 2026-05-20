@@ -1,3 +1,4 @@
+import { SSOStrategy } from '@/authStrategy/ssoStrategy'
 import type { CollectionConfig } from 'payload'
 
 export const Users: CollectionConfig = {
@@ -6,6 +7,10 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
   },
   auth: {
+    disableLocalStrategy: {
+      enableFields: true,
+    },
+    strategies: [SSOStrategy],
     loginWithUsername: {
       allowEmailLogin: true,
       requireUsername: true,
