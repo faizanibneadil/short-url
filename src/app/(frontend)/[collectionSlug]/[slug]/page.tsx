@@ -175,7 +175,6 @@ export default async function Page(props: {
                 __html: JSON.stringify(faqSchema),
             }}
         />
-        <Button nativeButton={false} render={<Link href='https://auth.devslix.com/admin/login' />}>Login</Button>
         <RichText
             data={page?.content as DefaultTypedEditorState}
             params={params}
