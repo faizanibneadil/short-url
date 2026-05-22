@@ -12,6 +12,7 @@ import { URLs } from './collections/Urls'
 import { Users } from './collections/Users'
 import { InlineBlocks } from './InlineBlocks'
 import { blocks } from './blocks'
+import { getServerSideURL } from './utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -71,7 +72,7 @@ export default buildConfig({
       uploadsCollection: 'media',
       generateTitle: ({ doc }) => `short.devslix.com — ${doc?.meta?.title}`,
       generateDescription: ({ doc }) => doc?.meta?.description,
-      generateURL: ({ doc, collectionSlug }) => `/${collectionSlug}/${doc?.slug}`,
+      generateURL: ({ doc, collectionSlug }) => `${getServerSideURL()}/${collectionSlug}/${doc?.slug}`,
     })
   ],
 })

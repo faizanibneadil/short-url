@@ -85,7 +85,7 @@ export const URLShortener: React.FC<{ blockProps: TURLShortenerPropType } & { pa
                             disabled={isCreating}
                             name="url"
                             data-slot="input-group-control"
-                            className="flex field-sizing-content min-h-16 w-full resize-none rounded-lg bg-transparent px-3 py-2.5 text-base transition-[color,box-shadow] outline-none md:text-sm"
+                            className="flex field-sizing-content min-h-16 w-full resize-none rounded-lg px-3 py-2.5 text-base transition-[color,box-shadow] outline-none md:text-sm"
                             placeholder="https://www.google.com?search=how+to+use+youtube"
                         />
                         <InputGroupAddon align="block-end">

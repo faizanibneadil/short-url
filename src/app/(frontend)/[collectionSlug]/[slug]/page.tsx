@@ -73,79 +73,60 @@ export default async function Page(props: {
 
     const schema = {
         "@context": "https://schema.org",
+
+        // 1. Main Type: Hum bata rahe hain ke ye page aik Software Application ka hai
         "@type": "SoftwareApplication",
-        name: "DevSlix URL Shortener",
-        applicationCategory: "BusinessApplication",
-        operatingSystem: "Web",
-        url: "https://short.devslix.com",
-        description:
-            "Free URL shortener to create short links, custom URLs, and track analytics.",
-        offers: {
+        "name": "DevSlix URL Shortener",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "url": "https://short.devslix.com",
+        "description": "Free URL shortener to create short links, custom URLs, and track analytics.",
+
+        "offers": {
             "@type": "Offer",
-            price: "0",
-            priceCurrency: "USD",
+            "price": "0",
+            "priceCurrency": "USD",
         },
-        creator: {
+
+        // 2. Creator ke andar hi hum ne Organization Schema daal diya (Ab alag se object nahi chahiye)
+        "creator": {
             "@type": "Organization",
-            name: "DevSlix",
+            "name": "DevSlix",
+            "url": "https://devslix.com",
+            "logo": "https://short.devslix.com/logo.png"
         },
-    };
-    const organizationSchema = {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: "DevSlix",
-        url: "https://devslix.com",
-        logo: "https://short.devslix.com/logo.png",
-        // sameAs: [
-        //     "https://twitter.com/yourusername",
-        //     "https://github.com/yourusername",
-        //     "https://linkedin.com/in/yourusername",
-        // ],
-    };
 
-    const websiteSchema = {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: "DevSlix URL Shortener",
-        url: "https://short.devslix.com",
-        // potentialAction: {
-        //     "@type": "SearchAction",
-        //     target:
-        //         "https://short.devslix.com/search?q={search_term_string}",
-        //     "query-input": "required name=search_term_string",
-        // },
-    };
-
-    const faqSchema = {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        mainEntity: [
-            {
-                "@type": "Question",
-                name: "What is DevSlix URL Shortener?",
-                acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "DevSlix is a free URL shortener that helps users create short and trackable links.",
+        // 3. SubjectOf ya MainEntity ke zariye hum ne FAQ ko bhi isi Software se jod diya
+        "subjectOf": {
+            "@type": "FAQPage",
+            "mainEntity": [
+                {
+                    "@type": "Question",
+                    "name": "What is DevSlix URL Shortener?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "DevSlix is a free URL shortener that helps users create short and trackable links."
+                    }
                 },
-            },
-            {
-                "@type": "Question",
-                name: "Can I create custom short URLs?",
-                acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Yes, DevSlix allows users to create custom branded short links.",
+                {
+                    "@type": "Question",
+                    "name": "Can I create custom short URLs?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, DevSlix allows users to create custom branded short links."
+                    }
                 },
-            },
-            {
-                "@type": "Question",
-                name: "Does DevSlix provide analytics?",
-                acceptedAnswer: {
-                    "@type": "Answer",
-                    text: "Yes, you can track clicks and link performance using built-in analytics.",
-                },
-            },
-        ],
-    };
+                {
+                    "@type": "Question",
+                    "name": "Does DevSlix provide analytics?",
+                    "acceptedAnswer": {
+                        "@type": "Answer",
+                        "text": "Yes, you can track clicks and link performance using built-in analytics."
+                    }
+                }
+            ]
+        }
+    }
 
     return <div className={cn({
         "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full p-4": true,
@@ -155,24 +136,6 @@ export default async function Page(props: {
             type="application/ld+json"
             dangerouslySetInnerHTML={{
                 __html: JSON.stringify(schema),
-            }}
-        />
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-                __html: JSON.stringify(organizationSchema),
-            }}
-        />
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-                __html: JSON.stringify(websiteSchema),
-            }}
-        />
-        <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-                __html: JSON.stringify(faqSchema),
             }}
         />
         <RichText

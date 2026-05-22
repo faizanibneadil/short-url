@@ -4,6 +4,7 @@ import { StickyFooter } from '@/components/footer'
 import { Outfit } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { GoogleTagManager } from '@next/third-parties/google'
+import { BackgroundRippleEffect } from '@/components/background-ripple-effect'
 
 export const metadata = {
   description: 'A blank template using Payload in a Next.js app.',
@@ -24,9 +25,12 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
       <GoogleTagManager gtmId="GTM-5HP8ZQMR" />
       <body className={cn(outfit.variable, 'antialiased')}>
         <div className="relative w-full">
+          <BackgroundRippleEffect />
           <div className="flex h-svh flex-col items-center justify-center gap-10">
             <div className="flex items-center gap-2">
-              <main>{children}</main>
+              <main>
+                {children}
+              </main>
             </div>
           </div>
           <StickyFooter />
