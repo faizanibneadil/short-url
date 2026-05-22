@@ -312,6 +312,7 @@ export interface Url {
    * Auto generated short slug
    */
   shortURL?: string | null;
+  shareable_url: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -445,6 +446,7 @@ export interface MediaSelect<T extends boolean = true> {
 export interface UrlsSelect<T extends boolean = true> {
   longURL?: T;
   shortURL?: T;
+  shareable_url?: T;
   updatedAt?: T;
   createdAt?: T;
 }

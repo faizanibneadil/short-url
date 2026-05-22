@@ -80,6 +80,15 @@ export const URLs: CollectionConfig<'urls'> = {
                 return true
             },
         },
+        {
+            type: 'text',
+            name: 'shareable_url',
+            required: true,
+            admin: {
+                readOnly: true,
+                disabled: true
+            }
+        }
     ],
 
     hooks: {
