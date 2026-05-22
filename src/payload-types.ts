@@ -312,7 +312,7 @@ export interface Url {
    * Auto generated short slug
    */
   shortURL?: string | null;
-  shareable_url: string;
+  shareable_url?: string | null;
   updatedAt: string;
   createdAt: string;
 }
