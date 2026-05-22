@@ -52,8 +52,8 @@ export default buildConfig({
       ]
     }
   }),
-  cors: ['https://parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
-  csrf: ['https://parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  cors: ['https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  csrf: ['https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   db: postgresAdapter({
     blocksAsJSON: true,
