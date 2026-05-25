@@ -13,6 +13,9 @@ import { Users } from './collections/Users'
 import { InlineBlocks } from './InlineBlocks'
 import { blocks } from './blocks'
 import { getServerSideURL } from './utilities/getURL'
+import { Settings } from './globals/Settings'
+import { Footer } from './globals/Footer'
+import { Header } from './globals/Header'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -25,6 +28,7 @@ export default buildConfig({
     },
   },
   collections: [Users, Media, URLs, Pages],
+  globals: [Header, Footer, Settings],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
