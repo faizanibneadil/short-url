@@ -38,7 +38,7 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
         <div className="relative w-full">
           <BackgroundRippleEffect />
           <Header headerProps={header} />
-          <main>
+          <main className="max-w-2xl mx-auto">
             {children}
           </main>
           <StickyFooter footerProps={footer} />

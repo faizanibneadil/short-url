@@ -127,7 +127,6 @@ export default async function Page(props: {
 
     return <div className={cn({
         "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full p-4": true,
-        "max-w-2xl mx-auto": page?.enableContainer
     })}>
         <script
             type="application/ld+json"

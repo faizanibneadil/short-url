@@ -54,7 +54,23 @@ export const Pages: CollectionConfig<'pages'> = {
                                         }),
                                     ]
                                 },
-                            })
+                            }),
+                            admin: {
+                                condition: ({ enableCollection }) => Boolean(enableCollection) === false,
+                            }
+                        },
+                        {
+                            type: 'text',
+                            name: 'configuredCollectionSlug',
+                            admin: {
+                                condition: ({ enableCollection }) => Boolean(enableCollection) === true,
+                                components: {
+                                    Field: {
+                                        path: '@/components/ConfiguredCollectionSlug/index.tsx',
+                                        exportName: 'ConfiguredCollectionSlug',
+                                    }
+                                },
+                            },
                         }
                     ]
                 },
@@ -172,6 +188,17 @@ export const Pages: CollectionConfig<'pages'> = {
                 description: 'Enable Container of the page.',
                 position: 'sidebar'
             }
+        },
+        {
+            type: 'checkbox',
+            name: 'enableCollection',
+            label: 'Enable Collection',
+            admin: {
+                position: 'sidebar',
+                description: 'If you want to show your collections like: Products, Categories etc then you have to change collection.',
+            },
+            required: true,
+            defaultValue: false
         },
     ]
 }

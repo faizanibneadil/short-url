@@ -8,12 +8,12 @@ export function formatHref(item: NonNullable<NonNullable<Footer['menus']>[number
     }
 
     if (item?.type === 'internal' && typeof item?.page?.value === 'object') {
-        // if (item?.page?.value?.enableCollection) {
-        // 	url = `/${item?.page?.value?.configuredCollectionSlug}`
-        // } else {
-        // 	url = `/${item?.page?.relationTo}/${item?.page?.value?.slug}`
-        // }
-        url = `/${item?.page?.relationTo}/${item?.page?.value?.slug}`
+        if (item?.page?.value?.enableCollection) {
+            url = `/${item?.page?.value?.configuredCollectionSlug}`
+        } else {
+            url = `/${item?.page?.relationTo}/${item?.page?.value?.slug}`
+        }
+        // url = `/${item?.page?.relationTo}/${item?.page?.value?.slug}`
     }
 
     return url
