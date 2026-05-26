@@ -5,7 +5,7 @@ import { Outfit } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import { GoogleTagManager } from '@next/third-parties/google'
 import { BackgroundRippleEffect } from '@/components/background-ripple-effect'
-import { queryGlobals } from '@/utilities/queryies/queryGlobals'
+import { queryGlobals } from '@/utilities/queries/queryGlobals'
 import { DataFromGlobalSlug } from 'payload'
 import { Header } from '@/components/header'
 

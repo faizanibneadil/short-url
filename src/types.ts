@@ -1,7 +1,7 @@
-import { CollectionSlug } from "payload"
+import type { CollectionSlug } from "payload"
 
 export type Params = Promise<{
-    collectionSlug: CollectionSlug,
+    collectionSlug: Extract<CollectionSlug, 'blogs'>,
     slug: string,
     url: string
 }>

@@ -2,7 +2,7 @@ import { RichText } from "@/components/RitchText";
 import { cn } from '@/lib/utils';
 import { Params, SearchParams } from '@/types';
 import { getServerSideURL } from '@/utilities/getURL';
-import { queryPageBySlug } from '@/utilities/queryies/queryPageBySlug';
+import { queryPageBySlug } from '@/utilities/queries/queryPageBySlug';
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
