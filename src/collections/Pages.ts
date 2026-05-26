@@ -24,6 +24,12 @@ export const Pages: CollectionConfig<'pages'> = {
     admin: {
         useAsTitle: 'title'
     },
+    defaultPopulate: {
+        meta: {
+            ldSchema_references: true
+        },
+        slug: true
+    },
     fields: [
         {
             type: 'text',
@@ -123,6 +129,35 @@ export const Pages: CollectionConfig<'pages'> = {
                             }
                         },
                         {
+                            type: 'relationship',
+                            relationTo: ['structured_schemas'],
+                            name: 'ldSchema_references',
+                            label: 'JSON LD Schema References',
+                            hasMany: true,
+                        },
+                        {
+                            type: 'row',
+                            fields: [{
+                                type: 'checkbox',
+                                name: 'index',
+                                required: true,
+                                defaultValue: true,
+                                admin: {
+                                    width: '50%',
+                                    description: 'Enabling this allows Google and other search engines to show this page in search results.',
+                                },
+                            }, {
+                                type: 'checkbox',
+                                name: 'follow',
+                                required: true,
+                                defaultValue: true,
+                                admin: {
+                                    width: '50%',
+                                    description: 'Enabling this tells search engines to follow the links present on this page to discover other pages.',
+                                },
+                            }]
+                        },
+                        {
                             type: 'group',
                             fields: [
                                 {
@@ -173,7 +208,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                     ]
                                 }
                             ]
-                        }
+                        },
                     ]
                 },
             ]

@@ -17,6 +17,7 @@ import { Settings } from './globals/Settings'
 import { Footer } from './globals/Footer'
 import { Header } from './globals/Header'
 import { Blogs } from './collections/Blogs'
+import { StructuredSchemas } from './collections/StructuredSchemas'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,7 +29,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, URLs, Pages, Blogs],
+  collections: [Users, Media, URLs, Pages, Blogs, StructuredSchemas],
   globals: [Header, Footer, Settings],
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

@@ -1,11 +1,13 @@
 import { RichText } from "@/components/RitchText";
 import { cn } from '@/lib/utils';
+import { StructuredSchema } from "@/payload-types";
 import { Params, SearchParams } from '@/types';
 import { getServerSideURL } from '@/utilities/getURL';
 import { queryPageBySlug } from '@/utilities/queries/queryPageBySlug';
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { notFound } from "next/navigation";
 
 export async function generateMetadata(props: {
     params: Params,
@@ -47,14 +49,14 @@ export async function generateMetadata(props: {
             canonical: __home ? __baseURL : new URL(`/pages/${page.slug}`, __baseURL),
         },
         robots: {
-            index: true,
-            follow: true,
+            index: page?.meta?.index,
+            follow: page?.meta?.follow,
         },
         twitter: {
             card: 'summary_large_image',
             title: page?.meta?.title || '',
             description: page?.meta?.description || '',
-        },
+        }
     }
 
 }
@@ -68,72 +70,32 @@ export default async function Page(props: {
         slug: params.slug
     })
 
-    const schema = {
-        "@context": "https://schema.org",
-
-        // 1. Main Type: Hum bata rahe hain ke ye page aik Software Application ka hai
-        "@type": "SoftwareApplication",
-        "name": "DevSlix URL Shortener",
-        "applicationCategory": "BusinessApplication",
-        "operatingSystem": "Web",
-        "url": "https://short.devslix.com",
-        "description": "Free URL shortener to create short links, custom URLs, and track analytics.",
-
-        "offers": {
-            "@type": "Offer",
-            "price": "0",
-            "priceCurrency": "USD",
-        },
-
-        // 2. Creator ke andar hi hum ne Organization Schema daal diya (Ab alag se object nahi chahiye)
-        "creator": {
-            "@type": "Organization",
-            "name": "DevSlix",
-            "url": "https://devslix.com",
-            "logo": "https://short.devslix.com/logo.png"
-        },
-
-        // 3. SubjectOf ya MainEntity ke zariye hum ne FAQ ko bhi isi Software se jod diya
-        "subjectOf": {
-            "@type": "FAQPage",
-            "mainEntity": [
-                {
-                    "@type": "Question",
-                    "name": "What is DevSlix URL Shortener?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "DevSlix is a free URL shortener that helps users create short and trackable links."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Can I create custom short URLs?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes, DevSlix allows users to create custom branded short links."
-                    }
-                },
-                {
-                    "@type": "Question",
-                    "name": "Does DevSlix provide analytics?",
-                    "acceptedAnswer": {
-                        "@type": "Answer",
-                        "text": "Yes, you can track clicks and link performance using built-in analytics."
-                    }
-                }
-            ]
-        }
+    if (!page) {
+        return notFound()
     }
 
     return <div className={cn({
         "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full p-4": true,
     })}>
-        <script
+        {Boolean(page?.meta?.ldSchema_references?.length) && (<script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@graph": [
+                        ...(page?.meta?.ldSchema_references?.map(schema => {
+                            return (schema.value as StructuredSchema).ld_schema
+                        }) ?? []).filter(Boolean)
+                    ]
+                }),
+            }}
+        />)}
+        {/* <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{
                 __html: JSON.stringify(schema),
             }}
-        />
+        /> */}
         <RichText
             data={page?.content as DefaultTypedEditorState}
             params={params}

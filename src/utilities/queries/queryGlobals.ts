@@ -2,7 +2,7 @@ import { Config } from '@/payload-types'
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
-export const queryGlobals = async ({ slug }: { slug: keyof Config['globals'] }) => {
+export const queryGlobals = async ({ slug, depth = 2 }: { slug: keyof Config['globals'], depth?: number }) => {
     const payload = await getPayload({
         config,
         onInit: payload => {
@@ -13,6 +13,7 @@ export const queryGlobals = async ({ slug }: { slug: keyof Config['globals'] }) 
     const global = await payload.findGlobal({
         slug,
         draft: false,
+        depth
     })
 
     return global

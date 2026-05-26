@@ -76,6 +76,7 @@ export interface Config {
     urls: Url;
     pages: Page;
     blogs: Blog;
+    structured_schemas: StructuredSchema;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,6 +89,7 @@ export interface Config {
     urls: UrlsSelect<false> | UrlsSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
+    structured_schemas: StructuredSchemasSelect<false> | StructuredSchemasSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -235,6 +237,20 @@ export interface Page {
      * The Web page keywords for search.
      */
     keywords?: string[] | null;
+    ldSchema_references?:
+      | {
+          relationTo: 'structured_schemas';
+          value: number | StructuredSchema;
+        }[]
+      | null;
+    /**
+     * Enabling this allows Google and other search engines to show this page in search results.
+     */
+    index: boolean;
+    /**
+     * Enabling this tells search engines to follow the links present on this page to discover other pages.
+     */
+    follow: boolean;
     /**
      * Enable Sitemap of the page.
      */
@@ -276,6 +292,28 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "structured_schemas".
+ */
+export interface StructuredSchema {
+  id: number;
+  title: string;
+  /**
+   * Do not use like this {"@Context":"https://schema.org"} make reuseable schemas just like a plan object
+   */
+  ld_schema:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -386,6 +424,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'blogs';
         value: number | Blog;
+      } | null)
+    | ({
+        relationTo: 'structured_schemas';
+        value: number | StructuredSchema;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -496,6 +538,9 @@ export interface PagesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
         keywords?: T;
+        ldSchema_references?: T;
+        index?: T;
+        follow?: T;
         enableSitemap?: T;
         changeFrequency?: T;
         priority?: T;
@@ -514,6 +559,16 @@ export interface PagesSelect<T extends boolean = true> {
 export interface BlogsSelect<T extends boolean = true> {
   title?: T;
   textContent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "structured_schemas_select".
+ */
+export interface StructuredSchemasSelect<T extends boolean = true> {
+  title?: T;
+  ld_schema?: T;
   updatedAt?: T;
   createdAt?: T;
 }

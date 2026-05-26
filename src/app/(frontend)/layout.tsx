@@ -28,7 +28,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   }) as DataFromGlobalSlug<'header'>
 
   const footer = await queryGlobals({
-    slug: 'footer'
+    slug: 'footer',
+    depth: 4
   }) as DataFromGlobalSlug<'footer'>
 
   return (

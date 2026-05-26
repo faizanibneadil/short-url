@@ -1,4 +1,4 @@
-import type { Page } from "@/payload-types"
+import type { StructuredSchema, Page } from "@/payload-types"
 import type { Params, SearchParams } from "@/types"
 import { getServerSideURL } from "@/utilities/getURL"
 import { queryCollectionByCollectionSlug } from "@/utilities/queries/queryCollectionByCollectionSlug"
@@ -44,8 +44,8 @@ const _collectionMap: CollectionMap = {
                     canonical: new URL(`/pages/${doc.slug}`, __baseURL),
                 },
                 robots: {
-                    index: true,
-                    follow: true,
+                    index: doc?.meta?.index,
+                    follow: doc?.meta?.follow,
                 },
                 twitter: {
                     card: 'summary_large_image',
@@ -98,12 +98,33 @@ export default async function Page(props: {
         return notFound()
     }
 
+    const page = await queryPageByConfiguredCollection({
+        collectionSlug: params.collectionSlug
+    })
+
     const collection = await queryCollectionByCollectionSlug({
         collectionSlug: params.collectionSlug
     })
 
     const Collection = _collectionMap[params.collectionSlug].RenderCollection
 
-    // @ts-expect-error
-    return <Collection collectionProps={collection} />
+    return (
+        <>
+            {Boolean(page?.meta?.ldSchema_references?.length) && (<script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@graph": [
+                            ...(page?.meta?.ldSchema_references?.map(schema => {
+                                return (schema.value as StructuredSchema).ld_schema
+                            }) ?? []).filter(Boolean)
+                        ]
+                    }),
+                }}
+            />)}
+            {/* @ts-expect-error */}
+            <Collection collectionProps={collection} />
+        </>
+    )
 }
