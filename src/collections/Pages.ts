@@ -160,49 +160,18 @@ export const Pages: CollectionConfig<'pages'> = {
                         }
                     ]
                 },
-                {
-                    name: 'settings',
-                    label: 'Settings',
-                    fields: [
-                        {
-                            type: 'row',
-                            fields: [
-                                {
-                                    type: 'checkbox',
-                                    name: 'enableHeader',
-                                    label: 'Enable Header',
-                                    defaultValue: true,
-                                    admin: {
-                                        description: 'Show or Hide header on the page'
-                                    }
-                                },
-                                {
-                                    type: 'checkbox',
-                                    name: 'enableFooter',
-                                    label: 'Enable Footer',
-                                    defaultValue: true,
-                                    admin: {
-                                        description: 'Show or Hide Footer on the page'
-                                    }
-                                },
-                                {
-                                    type: 'checkbox',
-                                    name: 'enableContainer',
-                                    label: 'Enable Container',
-                                    defaultValue: true,
-                                    admin: {
-                                        description: 'Enable Container of the page.'
-                                    }
-                                },
-                            ]
-                        }
-                    ],
-                    admin: {
-                        description: 'Manage your page settings like paddings, margins etc.'
-                    }
-                }
             ]
         },
-        slugField()
+        slugField(),
+        {
+            type: 'checkbox',
+            name: 'enableContainer',
+            label: 'Enable Container',
+            defaultValue: true,
+            admin: {
+                description: 'Enable Container of the page.',
+                position: 'sidebar'
+            }
+        },
     ]
 }

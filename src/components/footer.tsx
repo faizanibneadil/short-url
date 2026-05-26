@@ -4,6 +4,11 @@ import type React from "react";
 import type { ReactNode } from "react";
 // import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
+import { DataFromGlobalSlug } from "payload";
+import Link from "next/link";
+import { formatHref } from "@/utilities/formatHref";
+import Image from "next/image";
+import { getMediaUrl } from "@/utilities/getURL";
 // import { FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from "lucide-react";
 
 type FooterLink = {
@@ -16,7 +21,20 @@ type FooterLinkGroup = {
     links: FooterLink[];
 };
 
-export function StickyFooter() {
+export function StickyFooter(props: { footerProps: DataFromGlobalSlug<'footer'> }) {
+    const {
+        footerProps
+    } = props
+
+    const {
+        id,
+        createdAt,
+        logo,
+        menus,
+        updatedAt,
+        slogan
+    } = footerProps
+
     return (
         <footer
             className="relative h-(--footer-height) w-full border-t [--footer-height:520px] font-(family-name:--font-outfit)"
@@ -35,9 +53,11 @@ export function StickyFooter() {
                     <div className="relative mx-auto flex size-full max-w-6xl flex-col justify-between gap-5">
                         <div className="grid grid-cols-1 gap-8 px-4 pt-12 md:grid-cols-2 lg:grid-cols-4">
                             <AnimatedContainer className="w-full space-y-4">
-                                {/* <Logo className="h-5" /> */}<p>LOGO</p>
+                                {/* <Logo className="h-5" /> */}
+                                <p>Short By DevSlix</p>
+                                {/* <Image alt="Short By DevSlix" width={20} height={20} src={getMediaUrl(logo?.value)} /> */}
                                 <p className="mt-8 text-muted-foreground text-sm md:mt-0">
-                                    Beautifully crafted shadcn blocks by efferd.
+                                    {slogan}
                                 </p>
                                 <div className="flex gap-2">
                                     <Button size="icon-sm" variant="outline" render={<a href='#' />} nativeButton={false}>FB</Button>
@@ -46,24 +66,24 @@ export function StickyFooter() {
                                     ))} */}
                                 </div>
                             </AnimatedContainer>
-                            {footerLinkGroups.map((group, index) => (
+                            {menus?.map((menu, index) => (
                                 <AnimatedContainer
                                     className="w-full"
                                     delay={0.1 + index * 0.1}
-                                    key={group.label}
+                                    key={menu?.label}
                                 >
                                     <div className="mb-10 md:mb-0">
-                                        <h3 className="text-sm uppercase">{group.label}</h3>
+                                        <h3 className="text-sm uppercase">{menu?.label}</h3>
                                         <ul className="mt-4 space-y-2 text-muted-foreground text-sm md:text-xs lg:text-sm">
-                                            {group.links.map((link) => (
-                                                <li key={link.title}>
-                                                    <a
+                                            {menu?.links?.map((link) => (
+                                                <li key={link?.id}>
+                                                    <Link
                                                         className="inline-flex items-center hover:text-foreground [&_svg]:me-1 [&_svg]:size-4"
-                                                        href={link.href}
+                                                        href={formatHref(link)}
                                                     >
-                                                        {link.icon}
-                                                        {link.title}
-                                                    </a>
+                                                        {/* {link.icon} */}
+                                                        {link?.label}
+                                                    </Link>
                                                 </li>
                                             ))}
                                         </ul>
@@ -73,7 +93,7 @@ export function StickyFooter() {
                         </div>
                         <div className="flex flex-col items-center justify-between gap-2 border-t p-4 text-muted-foreground text-sm md:flex-row">
                             <p>
-                                &copy; {new Date().getFullYear()} devslix, All rights reserved.
+                                &copy; {new Date().getFullYear()} DevSlix, All rights reserved.
                             </p>
                             <a className="hover:text-foreground" href="#">
                                 License

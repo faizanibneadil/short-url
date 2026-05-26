@@ -1,14 +1,11 @@
-import config from '@payload-config'
 import { RichText } from "@/components/RitchText";
-import { CollectionSlug, getPayload } from "payload";
-import { Params, SearchParams } from '@/types';
-import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
-import dynamic from 'next/dynamic';
 import { cn } from '@/lib/utils';
-import { Metadata } from 'next';
+import { Params, SearchParams } from '@/types';
 import { getServerSideURL } from '@/utilities/getURL';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
+import { queryPageBySlug } from '@/utilities/queryies/queryPageBySlug';
+import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
+import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 
 export async function generateMetadata(props: {
     params: Params,
@@ -130,7 +127,7 @@ export default async function Page(props: {
 
     return <div className={cn({
         "prose md:prose-md dark:prose-invert font-(family-name:--font-outfit) w-full p-4": true,
-        "max-w-2xl mx-auto": page?.settings?.enableContainer
+        "max-w-2xl mx-auto": page?.enableContainer
     })}>
         <script
             type="application/ld+json"
@@ -156,22 +153,4 @@ export default async function Page(props: {
             }}
         />
     </div>
-}
-
-const queryPageBySlug = async ({
-    slug
-}: {
-    slug: string
-}) => {
-    const payload = await getPayload({ config })
-    const page = await payload.find({
-        collection: 'pages',
-        where: {
-            slug: {
-                equals: slug
-            }
-        }
-    })
-
-    return page?.docs?.at(0)
 }

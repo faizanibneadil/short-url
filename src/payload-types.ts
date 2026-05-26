@@ -240,27 +240,14 @@ export interface Page {
     priority?: number | null;
   };
   /**
-   * Manage your page settings like paddings, margins etc.
-   */
-  settings?: {
-    /**
-     * Show or Hide header on the page
-     */
-    enableHeader?: boolean | null;
-    /**
-     * Show or Hide Footer on the page
-     */
-    enableFooter?: boolean | null;
-    /**
-     * Enable Container of the page.
-     */
-    enableContainer?: boolean | null;
-  };
-  /**
    * When enabled, the slug will auto-generate from the title field on save and autosave.
    */
   generateSlug?: boolean | null;
   slug: string;
+  /**
+   * Enable Container of the page.
+   */
+  enableContainer?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -476,15 +463,9 @@ export interface PagesSelect<T extends boolean = true> {
         changeFrequency?: T;
         priority?: T;
       };
-  settings?:
-    | T
-    | {
-        enableHeader?: T;
-        enableFooter?: T;
-        enableContainer?: T;
-      };
   generateSlug?: T;
   slug?: T;
+  enableContainer?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -548,14 +529,22 @@ export interface Footer {
     relationTo: 'media';
     value: number | Media;
   } | null;
+  slogan?: string | null;
   menus?:
     | {
-        type?: ('external' | 'internal') | null;
-        url?: string | null;
-        page?: {
-          relationTo: 'pages';
-          value: number | Page;
-        } | null;
+        label?: string | null;
+        links?:
+          | {
+              type?: ('external' | 'internal') | null;
+              url?: string | null;
+              page?: {
+                relationTo: 'pages';
+                value: number | Page;
+              } | null;
+              label?: string | null;
+              id?: string | null;
+            }[]
+          | null;
         id?: string | null;
       }[]
     | null;
@@ -598,12 +587,20 @@ export interface HeaderSelect<T extends boolean = true> {
  */
 export interface FooterSelect<T extends boolean = true> {
   logo?: T;
+  slogan?: T;
   menus?:
     | T
     | {
-        type?: T;
-        url?: T;
-        page?: T;
+        label?: T;
+        links?:
+          | T
+          | {
+              type?: T;
+              url?: T;
+              page?: T;
+              label?: T;
+              id?: T;
+            };
         id?: T;
       };
   updatedAt?: T;

@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
         pathname: '/api/media/file/**',
       },
     ],
+    remotePatterns: [{
+      hostname: 'localhost'
+    }]
   },
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {

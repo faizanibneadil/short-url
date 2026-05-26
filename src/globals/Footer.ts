@@ -7,31 +7,47 @@ export const Footer: GlobalConfig<'footer'> = {
         relationTo: ['media'],
         name: 'logo'
     }, {
+        type: 'textarea',
+        name: 'slogan'
+    }, {
         type: 'array',
         name: 'menus',
         fields: [{
-            type: 'radio',
-            name: 'type',
-            defaultValue: 'internal',
-            options: [{
-                label: 'External',
-                value: 'external'
-            }, {
-                label: 'Internal',
-                value: 'internal'
-            }]
+            type: 'text',
+            name: 'label'
         }, {
-            type: 'row',
+            type: 'array',
+            name: 'links',
             fields: [{
-                type: 'text',
-                name: 'url',
-                admin: {
-                    condition: (_, { type }) => type === 'external'
-                }
+                type: 'radio',
+                name: 'type',
+                defaultValue: 'internal',
+                options: [{
+                    label: 'External',
+                    value: 'external'
+                }, {
+                    label: 'Internal',
+                    value: 'internal'
+                }]
             }, {
-                type: 'relationship',
-                relationTo: ['pages'],
-                name: 'page'
+                type: 'row',
+                fields: [{
+                    type: 'text',
+                    name: 'url',
+                    admin: {
+                        condition: (_, { type }) => type === 'external'
+                    }
+                }, {
+                    type: 'relationship',
+                    relationTo: ['pages'],
+                    name: 'page',
+                    admin: {
+                        condition: (_, { type }) => type === 'internal'
+                    }
+                }, {
+                    type: 'text',
+                    name: 'label',
+                }]
             }]
         }]
     }]
