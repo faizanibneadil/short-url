@@ -3,8 +3,8 @@ import { CollectionConfig } from "payload";
 export const StructuredSchemas: CollectionConfig<'structured_schemas'> = {
     slug: 'structured_schemas',
     labels: {
-        plural: 'ld+json Schemas',
-        singular: 'ld+json Schema'
+        plural: 'Structures JSON Schemas',
+        singular: 'Structured JSON Schema'
     },
     admin: { useAsTitle: 'title' },
     fields: [{
