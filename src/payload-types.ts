@@ -69,6 +69,7 @@ export interface Config {
     urlShortener: TURLShortenerPropType;
     comicText: TComicTextPropsType;
     linkBadge: TLinkBadgePropType;
+    rotate_text: RotateTextPropsType;
   };
   collections: {
     users: User;
@@ -314,6 +315,25 @@ export interface StructuredSchema {
     | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RotateTextPropsType".
+ */
+export interface RotateTextPropsType {
+  texts: string[];
+  main_class_name?: string | null;
+  stagger_from?: ('first' | 'last' | 'center' | 'random' | 'number') | null;
+  stagger_from_value_in_number?: number | null;
+  stagger_duration?: number | null;
+  split_level_class_name?: string | null;
+  rotation_interval?: number | null;
+  split_by?: 'characters' | null;
+  enable_auto?: boolean | null;
+  enable_loop?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'rotate_text';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import { cn } from '@/lib/utils'
-import type { TComicTextPropsType, TLinkBadgePropType, TURLShortenerPropType } from '@/payload-types'
+import type { TComicTextPropsType, TLinkBadgePropType, TURLShortenerPropType, RotateTextPropsType } from '@/payload-types'
 import type { Params, SearchParams } from '@/types'
 import {
     DefaultNodeTypes,
@@ -19,7 +19,7 @@ import {
 type NodeTypes =
     | DefaultNodeTypes
     | SerializedBlockNode<TURLShortenerPropType>
-    | SerializedInlineBlockNode<TLinkBadgePropType | TComicTextPropsType>
+    | SerializedInlineBlockNode<TLinkBadgePropType | TComicTextPropsType | RotateTextPropsType>
 
 const jsxConverters: (args: {
     params: Awaited<Params>,

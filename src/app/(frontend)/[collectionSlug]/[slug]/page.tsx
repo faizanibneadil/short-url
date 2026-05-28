@@ -90,12 +90,6 @@ export default async function Page(props: {
                 }),
             }}
         />)}
-        {/* <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-                __html: JSON.stringify(schema),
-            }}
-        /> */}
         <RichText
             data={page?.content as DefaultTypedEditorState}
             params={params}
@@ -106,11 +100,27 @@ export default async function Page(props: {
                         default: URLShortener
                     })))
                     return <URLShortener blockProps={node.fields} params={params} searchParams={searchParams} />
-                }
+                },
             }}
             inlineBlocks={{
                 comicText: ({ node }) => <div>Comic Text</div>,
-                linkBadge: ({ node }) => <div>Link Badge</div>
+                linkBadge: ({ node }) => <div>Link Badge</div>,
+                rotate_text: ({ node }) => {
+                    const RotateText = dynamic(() => import('@/components/RotatingText').then(({ RotatingText }) => ({
+                        default: RotatingText
+                    })))
+                    return <RotateText
+                        texts={node.fields.texts}
+                        mainClassName={node.fields.main_class_name!}
+                        rotationInterval={node.fields.rotation_interval!}
+                        staggerDuration={node.fields.stagger_duration!}
+                        staggerFrom={node.fields.stagger_from === 'number' ? node.fields.stagger_from_value_in_number! : node.fields.stagger_from!}
+                        splitLevelClassName={node.fields.split_level_class_name!}
+                        splitBy={node.fields.split_by!}
+                        loop={node.fields.enable_loop!}
+                        auto={node.fields.enable_auto!}
+                    />
+                }
             }}
         />
     </div>

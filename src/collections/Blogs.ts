@@ -16,6 +16,10 @@ export const Blogs: CollectionConfig<'blogs'> = {
     }, {
         type: 'richText',
         name: 'textContent',
-        editor: lexicalEditor()
+        editor: lexicalEditor({
+            features: ({ defaultFeatures, rootFeatures }) => {
+                return [...defaultFeatures, ...rootFeatures]
+            }
+        })
     }]
 }

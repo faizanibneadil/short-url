@@ -56,7 +56,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                         ...rootFeatures,
                                         BlocksFeature({
                                             blocks: ['urlShortener'],
-                                            inlineBlocks: ['comicText', 'linkBadge']
+                                            inlineBlocks: ['comicText', 'linkBadge', 'rotate_text']
                                         }),
                                     ]
                                 },
