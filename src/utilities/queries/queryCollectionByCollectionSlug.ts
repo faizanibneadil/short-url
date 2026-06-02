@@ -4,7 +4,7 @@ import config from '@payload-config'
 export const queryCollectionByCollectionSlug = async ({
     collectionSlug
 }: {
-    collectionSlug: Extract<CollectionSlug, 'blogs'>
+    collectionSlug: Extract<CollectionSlug, 'blogs' | 'changelogs'>
 }) => {
     const payload = await getPayload({ config })
     const collection = await payload.find({

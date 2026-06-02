@@ -2,6 +2,7 @@ import { RichText } from "@/components/RitchText";
 import { cn } from '@/lib/utils';
 import { StructuredSchema } from "@/payload-types";
 import { Params, SearchParams } from '@/types';
+import { formatCanonicalURL } from "@/utilities/formatCanonicalURL";
 import { getServerSideURL } from '@/utilities/getURL';
 import { queryPageBySlug } from '@/utilities/queries/queryPageBySlug';
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
@@ -26,7 +27,6 @@ export async function generateMetadata(props: {
         }
     }
 
-    const __home = page.slug === 'home'
     const __baseURL = getServerSideURL()
 
     return {
@@ -46,7 +46,7 @@ export async function generateMetadata(props: {
             url: 'https://devslix.com'
         },
         alternates: {
-            canonical: __home ? __baseURL : new URL(`/pages/${page.slug}`, __baseURL),
+            canonical: formatCanonicalURL(page)
         },
         robots: {
             index: page?.meta?.index,

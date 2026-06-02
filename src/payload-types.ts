@@ -78,6 +78,7 @@ export interface Config {
     pages: Page;
     blogs: Blog;
     structured_schemas: StructuredSchema;
+    changelogs: Changelog;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -91,6 +92,7 @@ export interface Config {
     pages: PagesSelect<false> | PagesSelect<true>;
     blogs: BlogsSelect<false> | BlogsSelect<true>;
     structured_schemas: StructuredSchemasSelect<false> | StructuredSchemasSelect<true>;
+    changelogs: ChangelogsSelect<false> | ChangelogsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -403,6 +405,31 @@ export interface Blog {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "changelogs".
+ */
+export interface Changelog {
+  id: number;
+  title: string;
+  changes: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -448,6 +475,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'structured_schemas';
         value: number | StructuredSchema;
+      } | null)
+    | ({
+        relationTo: 'changelogs';
+        value: number | Changelog;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -589,6 +620,16 @@ export interface BlogsSelect<T extends boolean = true> {
 export interface StructuredSchemasSelect<T extends boolean = true> {
   title?: T;
   ld_schema?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "changelogs_select".
+ */
+export interface ChangelogsSelect<T extends boolean = true> {
+  title?: T;
+  changes?: T;
   updatedAt?: T;
   createdAt?: T;
 }

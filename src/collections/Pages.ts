@@ -28,7 +28,9 @@ export const Pages: CollectionConfig<'pages'> = {
         meta: {
             ldSchema_references: true
         },
-        slug: true
+        slug: true,
+        configuredCollectionSlug: true,
+        enableCollection: true
     },
     fields: [
         {

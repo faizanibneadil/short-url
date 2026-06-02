@@ -1,7 +1,7 @@
 import { CollectionSlug, getPayload } from "payload";
 import config from "@payload-config";
 
-export const queryPageByConfiguredCollection = async ({ collectionSlug }: { collectionSlug: Extract<CollectionSlug, 'blogs'> }) => {
+export const queryPageByConfiguredCollection = async ({ collectionSlug }: { collectionSlug: Extract<CollectionSlug, 'blogs' | 'changelogs'> }) => {
     const payload = await getPayload({ config })
     const page = await payload.find({
         collection: 'pages',
