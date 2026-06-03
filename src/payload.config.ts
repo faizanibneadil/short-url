@@ -19,6 +19,7 @@ import { Header } from './globals/Header'
 import { Blogs } from './collections/Blogs'
 import { StructuredSchemas } from './collections/StructuredSchemas'
 import { Changelogs } from './collections/Changelogs'
+import { Page } from './payload-types'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -79,7 +80,15 @@ export default buildConfig({
       uploadsCollection: 'media',
       generateTitle: ({ doc }) => `short.devslix.com — ${doc?.meta?.title}`,
       generateDescription: ({ doc }) => doc?.meta?.description,
-      generateURL: ({ doc, collectionSlug }) => `${getServerSideURL()}/${collectionSlug}/${doc?.slug}`,
+      generateURL: ({ doc, collectionSlug }) => {
+        if (collectionSlug === 'pages') {
+          const page = doc as Page
+          if (page?.enableCollection) {
+            return `${getServerSideURL()}/${page?.configuredCollectionSlug}`
+          }
+        }
+        return `${getServerSideURL()}/${collectionSlug}/${doc?.slug}`
+      },
     })
   ],
 })
