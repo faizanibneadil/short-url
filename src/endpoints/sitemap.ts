@@ -2,13 +2,13 @@ import { AppCollectionSlug } from "@/types";
 import { formatCanonicalURL } from "@/utilities/formatCanonicalURL";
 import { MetadataRoute } from "next";
 import { Endpoint } from "payload";
-import { ErrorLevel, SitemapStream, streamToPromise } from 'sitemap';
+import { EnumChangefreq, ErrorLevel, SitemapItemLoose, SitemapStream, streamToPromise } from 'sitemap';
 
 export const Sitemap: Endpoint = {
     handler: async (req) => {
         // const collectionSlug = req?.routeParams?.collectionSlug as AppCollectionSlug
         // console.log(collectionSlug, "collectionSlug")
-        const sitemap: MetadataRoute.Sitemap = []
+        const sitemap: SitemapItemLoose[] = []
 
         const pages = await req.payload.find({
             collection: 'pages',
@@ -23,8 +23,8 @@ export const Sitemap: Endpoint = {
                 sitemap.push({
                     url: formatCanonicalURL(doc).toString(), // doc?.slug === 'home' ? __baseURL : new URL(`/pages/${doc?.slug}`, __baseURL).toString(),
                     priority: doc?.meta.priority ?? undefined,
-                    changeFrequency: doc?.meta.changeFrequency ?? undefined,
-                    lastModified: doc?.updatedAt,
+                    changefreq: (doc?.meta.changeFrequency as EnumChangefreq) ?? undefined,
+                    lastmod: doc?.updatedAt,
                 })
             }
         }
@@ -37,7 +37,7 @@ export const Sitemap: Endpoint = {
                 errorHandler: (error: Error, level: ErrorLevel) => {
                     req.payload.logger.error(`Error generating sitemap:  ${error}, level: ${level}`);
                 },
-                hostname: req.payload.config.serverURL
+                hostname: req.payload.config.serverURL,
             });
             sitemap.forEach((item) => stream.write(item));
             stream.end();
