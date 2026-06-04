@@ -51,6 +51,7 @@ export default buildConfig({
           maxDepth: 2,
           internalDocToHref: ({ linkNode }) => {
             const relationTo = linkNode.fields.doc?.relationTo
+            console.log(linkNode.fields.doc)
             // @ts-expect-error
             const slug = linkNode.fields.doc?.value?.slug
             return `/${relationTo}/${slug}`

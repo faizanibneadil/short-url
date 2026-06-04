@@ -8,8 +8,10 @@ import {
     OverviewField,
     PreviewField,
 } from '@payloadcms/plugin-seo/fields'
+import { Sitemap } from "@/endpoints";
 
 export const Pages: CollectionConfig<'pages'> = {
+    endpoints: [Sitemap],
     slug: 'pages',
     access: {
         create: ({ req }) => Boolean(req.user),
