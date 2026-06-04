@@ -14,6 +14,7 @@ export const Sitemap: Endpoint = {
             collection: 'pages',
             pagination: false,
             draft: false,
+            overrideAccess: true,
             req,
             trash: false,
         })
