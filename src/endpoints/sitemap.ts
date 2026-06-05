@@ -38,7 +38,7 @@ export const Sitemap: Endpoint = {
                 errorHandler: (error: Error, level: ErrorLevel) => {
                     req.payload.logger.error(`Error generating sitemap:  ${error}, level: ${level}`);
                 },
-                hostname: req.payload.config.serverURL,
+                hostname: await req.payload.config.serverURL,
             });
             sitemap.forEach((item) => stream.write(item));
             stream.end();
