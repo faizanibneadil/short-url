@@ -19,6 +19,8 @@ export type CollectionMapType = {
     [K in AppCollectionSlug]: {
         component: React.ComponentType<{
             collectionProps: CollectionProps<K>
+            params: Awaited<Params>,
+            searchParams: Awaited<SearchParams>
         }>,
         metadata: (args: { doc: Page }) => Metadata | Promise<Metadata>,
     }

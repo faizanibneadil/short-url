@@ -96,7 +96,7 @@ export const generateMetadata = async (props: {
     searchParams: SearchParams
 }): Promise<Metadata> => {
 
-    const params = await props.params
+    const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
     if (!Object.keys(_collectionMap).includes(params.collectionSlug)) {
         return {
@@ -126,7 +126,7 @@ export default async function Page(props: {
     params: Params,
     searchParams: SearchParams
 }) {
-    const params = await props.params
+    const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
     if (!Object.keys(_collectionMap).includes(params.collectionSlug)) {
         return notFound()
@@ -158,7 +158,7 @@ export default async function Page(props: {
                 }}
             />)}
             {/* @ts-expect-error */}
-            <Collection collectionProps={collection} />
+            <Collection params={params} searchParams={searchParams} collectionProps={collection} />
         </>
     )
 }

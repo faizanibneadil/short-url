@@ -1,7 +1,11 @@
 import { ChangeLog } from "@/components/ChangeLogs";
-import { CollectionProps } from "@/types";
+import { CollectionProps, Params, SearchParams } from "@/types";
 
-export const RenderChangelogCollection: React.FC<{ collectionProps: CollectionProps<'changelogs'> }> = (props) => {
+export const RenderChangelogCollection: React.FC<{
+    collectionProps: CollectionProps<'changelogs'>,
+    params: Awaited<Params>,
+    searchParams: Awaited<SearchParams>
+}> = (props) => {
     const {
         collectionProps
     } = props || {}
@@ -11,8 +15,10 @@ export const RenderChangelogCollection: React.FC<{ collectionProps: CollectionPr
     }
 
     const logs = collectionProps?.docs?.map(log => (
-        <ChangeLog change={log} key={log.id} />
+        <ChangeLog params={props.params} searchParams={props.searchParams} change={log} key={log.id} />
     ))
 
-    return logs
+    return <div className="flex flex-col gap-4">
+        {logs}
+    </div>
 }
