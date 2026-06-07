@@ -143,7 +143,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                 type: 'checkbox',
                                 name: 'index',
                                 required: true,
-                                defaultValue: true,
+                                defaultValue: false,
                                 admin: {
                                     width: '50%',
                                     description: 'Enabling this allows Google and other search engines to show this page in search results.',
@@ -152,7 +152,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                 type: 'checkbox',
                                 name: 'follow',
                                 required: true,
-                                defaultValue: true,
+                                defaultValue: false,
                                 admin: {
                                     width: '50%',
                                     description: 'Enabling this tells search engines to follow the links present on this page to discover other pages.',
@@ -169,7 +169,7 @@ export const Pages: CollectionConfig<'pages'> = {
                                             type: 'checkbox',
                                             name: 'enableSitemap',
                                             label: 'Enable Sitemap',
-                                            defaultValue: true,
+                                            defaultValue: false,
                                             required: true,
                                             admin: {
                                                 description: 'Enable Sitemap of the page.'
