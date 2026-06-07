@@ -5,6 +5,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 import { seoPlugin } from '@payloadcms/plugin-seo';
+// import { redisKVAdapter } from '@payloadcms/kv-redis'
 
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
@@ -20,11 +21,20 @@ import { Blogs } from './collections/Blogs'
 import { StructuredSchemas } from './collections/StructuredSchemas'
 import { Changelogs } from './collections/Changelogs'
 import { Page } from './payload-types'
+import { cloudflareKVadapter } from './utilities/cloudflareKVAdapter'
+import Cloudflare from 'cloudflare'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
+  kv: cloudflareKVadapter({
+    cloudflareInstance: new Cloudflare({
+      apiToken: process.env.CLOUDFLARE_API_TOKEN!,
+    }),
+    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
+    cloudflareKvNamespaceId: process.env.CLOUDFLARE_KV_NAMESPACE_ID!
+  }),
   admin: {
     user: Users.slug,
     importMap: {

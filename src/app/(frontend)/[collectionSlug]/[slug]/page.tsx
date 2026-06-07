@@ -1,24 +1,28 @@
 import { RichText } from "@/components/RitchText";
 import { cn } from '@/lib/utils';
-import { StructuredSchema } from "@/payload-types";
+import type { Page, StructuredSchema } from "@/payload-types";
 import { Params, SearchParams } from '@/types';
 import { formatCanonicalURL } from "@/utilities/formatCanonicalURL";
 import { getServerSideURL } from '@/utilities/getURL';
-import { queryPageBySlug } from '@/utilities/queries/queryPageBySlug';
+// import { queryPageBySlug } from '@/utilities/queries/queryPageBySlug';
 import { DefaultTypedEditorState } from '@payloadcms/richtext-lexical';
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
 import { notFound } from "next/navigation";
+import { getPayload } from "payload";
+import config from '@payload-config'
 
 export async function generateMetadata(props: {
     params: Params,
     searchParams: SearchParams
 }): Promise<Metadata> {
+    const payload = await getPayload({ config })
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
-    const page = await queryPageBySlug({
-        slug: params.slug
-    })
+    const page = await payload.kv.get<Page>(params.slug)
+    // await queryPageBySlug({
+    //     slug: params.slug
+    // })
 
     if (!page) {
         return {
@@ -66,9 +70,12 @@ export default async function Page(props: {
     searchParams: SearchParams
 }) {
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
-    const page = await queryPageBySlug({
-        slug: params.slug
-    })
+
+    const payload = await getPayload({ config })
+    const page = await payload.kv.get<Page>(params.slug)
+    // await queryPageBySlug({
+    //     slug: params.slug
+    // })
 
     if (!page) {
         return notFound()

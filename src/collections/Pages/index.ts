@@ -9,6 +9,7 @@ import {
     PreviewField,
 } from '@payloadcms/plugin-seo/fields'
 import { Sitemap } from "@/endpoints";
+import { AfterChangeHook } from "./hooks/afterChangeHook";
 
 export const Pages: CollectionConfig<'pages'> = {
     endpoints: [Sitemap],
@@ -92,9 +93,6 @@ export const Pages: CollectionConfig<'pages'> = {
                     },
                     fields: [
                         MetaTitleField({
-                            overrides: {
-
-                            },
                             // if the `generateTitle` function is configured
                             hasGenerateFn: true,
                         }),
@@ -239,5 +237,8 @@ export const Pages: CollectionConfig<'pages'> = {
             required: true,
             defaultValue: false
         },
-    ]
+    ],
+    hooks: {
+        afterChange: [AfterChangeHook]
+    }
 }

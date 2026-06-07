@@ -24,6 +24,8 @@ const nextConfig: NextConfig = {
     ],
     remotePatterns: [{
       hostname: 'localhost'
+    }, {
+      hostname: 'https://short.devslix.com'
     }]
   },
   webpack: (webpackConfig) => {

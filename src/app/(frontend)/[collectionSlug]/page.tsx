@@ -1,12 +1,14 @@
-import type { StructuredSchema } from "@/payload-types"
+import type { Page, StructuredSchema } from "@/payload-types"
 import type { CollectionMapType, Params, SearchParams } from "@/types"
 import { formatCanonicalURL } from "@/utilities/formatCanonicalURL"
 import { getServerSideURL } from "@/utilities/getURL"
 import { queryCollectionByCollectionSlug } from "@/utilities/queries/queryCollectionByCollectionSlug"
-import { queryPageByConfiguredCollection } from "@/utilities/queries/queryPageByConfiguiredCollection"
+// import { queryPageByConfiguredCollection } from "@/utilities/queries/queryPageByConfiguiredCollection"
 import type { Metadata } from "next"
 import dynamic from "next/dynamic"
 import { notFound } from "next/navigation"
+import config from '@payload-config'
+import { getPayload } from "payload"
 
 
 const _collectionMap: CollectionMapType = {
@@ -95,7 +97,7 @@ export const generateMetadata = async (props: {
     params: Params,
     searchParams: SearchParams
 }): Promise<Metadata> => {
-
+    const payload = await getPayload({ config })
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
     if (!Object.keys(_collectionMap).includes(params.collectionSlug)) {
@@ -105,9 +107,10 @@ export const generateMetadata = async (props: {
         }
     }
 
-    const page = await queryPageByConfiguredCollection({
-        collectionSlug: params.collectionSlug
-    })
+    const page = await payload.kv.get<Page>(params.collectionSlug)
+    // const page = await queryPageByConfiguredCollection({
+    //     collectionSlug: params.collectionSlug
+    // })
 
     if (params.collectionSlug in _collectionMap) {
         const metadata = _collectionMap[params.collectionSlug].metadata
@@ -126,15 +129,17 @@ export default async function Page(props: {
     params: Params,
     searchParams: SearchParams
 }) {
+    const payload = await getPayload({ config })
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
     if (!Object.keys(_collectionMap).includes(params.collectionSlug)) {
         return notFound()
     }
 
-    const page = await queryPageByConfiguredCollection({
-        collectionSlug: params.collectionSlug
-    })
+    const page = await payload.kv.get<Page>(params.collectionSlug)
+    // const page = await queryPageByConfiguredCollection({
+    //     collectionSlug: params.collectionSlug
+    // })
 
     const collection = await queryCollectionByCollectionSlug({
         collectionSlug: params.collectionSlug

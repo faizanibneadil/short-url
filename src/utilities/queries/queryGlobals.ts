@@ -1,5 +1,6 @@
 import { Config } from '@/payload-types'
 import config from '@payload-config'
+import { cacheTag } from 'next/cache'
 import { getPayload } from 'payload'
 
 export const queryGlobals = async ({ slug, depth = 2 }: { slug: keyof Config['globals'], depth?: number }) => {
