@@ -23,6 +23,7 @@ import { Changelogs } from './collections/Changelogs'
 import { Page } from './payload-types'
 import { cloudflareKVadapter } from './utilities/cloudflareKVAdapter'
 import Cloudflare from 'cloudflare'
+import { InitializePagesCache } from './utilities/operations/initializePagesCache'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -102,4 +103,7 @@ export default buildConfig({
       },
     })
   ],
+  onInit: async payload => {
+    await InitializePagesCache({ payload })
+  }
 })
