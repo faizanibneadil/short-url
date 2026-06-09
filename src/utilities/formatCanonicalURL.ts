@@ -6,11 +6,7 @@ export const formatCanonicalURL = (page: Page) => {
 
     let url: URL | undefined
 
-    if (page?.slug === 'home' && page?.enableCollection) {
-        url = new URL(__baseURL)
-    } else if (page?.slug === 'home') {
-        url = new URL(__baseURL)
-    } else if (page?.enableCollection) {
+    if (page?.enableCollection) {
         url = new URL(`/${page?.configuredCollectionSlug}`, __baseURL)
     } else {
         url = new URL(`/pages/${page.slug}`, __baseURL)
