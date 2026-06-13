@@ -13,7 +13,7 @@ import { getPayload } from "payload"
 
 const _collectionMap: CollectionMapType = {
     changelogs: {
-        metadata: async ({ doc }) => {
+        metadata: async ({ doc, params, searchParams }) => {
             const __baseURL = getServerSideURL()
             return {
                 title: doc?.meta?.title,
@@ -32,7 +32,7 @@ const _collectionMap: CollectionMapType = {
                     url: 'https://devslix.com'
                 },
                 alternates: {
-                    canonical: formatCanonicalURL(doc),
+                    canonical: formatCanonicalURL({ doc, collectionSlug: params.collectionSlug }),
                 },
                 robots: {
                     index: doc?.meta?.index,
@@ -58,7 +58,7 @@ const _collectionMap: CollectionMapType = {
 
             return 'blogs'
         },
-        metadata: async ({ doc }) => {
+        metadata: async ({ doc, params, searchParams }) => {
             const __baseURL = getServerSideURL()
             return {
                 title: doc?.meta?.title,
@@ -77,7 +77,7 @@ const _collectionMap: CollectionMapType = {
                     url: 'https://devslix.com'
                 },
                 alternates: {
-                    canonical: formatCanonicalURL(doc),
+                    canonical: formatCanonicalURL({ doc, collectionSlug: params.collectionSlug }),
                 },
                 robots: {
                     index: doc?.meta?.index,
@@ -113,10 +113,10 @@ export const generateMetadata = async (props: {
     // })
 
     if (params.collectionSlug in _collectionMap) {
-        const metadata = _collectionMap[params.collectionSlug].metadata
+        const metadata = _collectionMap?.[params.collectionSlug]?.metadata
 
         if (typeof metadata === 'function') {
-            return await metadata({ doc: page! })
+            return await metadata({ doc: page!, params, searchParams })
         }
 
         return {}
@@ -145,7 +145,7 @@ export default async function Page(props: {
         collectionSlug: params.collectionSlug
     })
 
-    const Collection = _collectionMap[params.collectionSlug].component
+    const Collection = _collectionMap?.[params.collectionSlug]?.component
 
     return (
         <>

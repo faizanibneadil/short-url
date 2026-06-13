@@ -1,1 +1,1 @@
-export { Sitemap } from './sitemap'
+export { generateSitemap } from './sitemap'

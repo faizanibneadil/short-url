@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
     for (const doc of (pages.docs ?? [])) {
         if (doc?.meta?.enableSitemap) {
             sitemap.push({
-                url: formatCanonicalURL(doc).toString(), // doc?.slug === 'home' ? __baseURL : new URL(`/pages/${doc?.slug}`, __baseURL).toString(),
+                url: formatCanonicalURL({ doc, collectionSlug: 'pages' }).toString(), // doc?.slug === 'home' ? __baseURL : new URL(`/pages/${doc?.slug}`, __baseURL).toString(),
                 priority: doc?.meta.priority ?? undefined,
                 changefreq: (doc?.meta.changeFrequency as EnumChangefreq) ?? undefined,
                 lastmod: doc?.updatedAt,

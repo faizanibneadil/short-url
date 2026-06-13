@@ -8,11 +8,13 @@ import {
     OverviewField,
     PreviewField,
 } from '@payloadcms/plugin-seo/fields'
-import { Sitemap } from "@/endpoints";
+import { generateSitemap } from "@/endpoints";
 import { AfterChangeHook } from "./hooks/afterChangeHook";
 
 export const Pages: CollectionConfig<'pages'> = {
-    endpoints: [Sitemap],
+    endpoints: [generateSitemap({
+        collectionSlug: 'pages'
+    })],
     slug: 'pages',
     access: {
         create: ({ req }) => Boolean(req.user),

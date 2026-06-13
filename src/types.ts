@@ -2,7 +2,7 @@ import type { CollectionSlug, DataFromCollectionSlug, PaginatedDocs } from "payl
 import { Page } from "./payload-types"
 import { Metadata } from "next"
 
-export type AppCollectionSlug = Extract<CollectionSlug, 'blogs' | 'changelogs'>
+export type AppCollectionSlug = Extract<CollectionSlug, 'blogs' | 'changelogs' | 'pages'>
 
 export type Params = Promise<{
     collectionSlug: AppCollectionSlug,
@@ -16,12 +16,12 @@ export type SearchParams = Promise<{
 
 export type CollectionProps<K extends AppCollectionSlug> = PaginatedDocs<DataFromCollectionSlug<K>>
 export type CollectionMapType = {
-    [K in AppCollectionSlug]: {
+    [K in AppCollectionSlug]?: {
         component: React.ComponentType<{
             collectionProps: CollectionProps<K>
             params: Awaited<Params>,
             searchParams: Awaited<SearchParams>
         }>,
-        metadata: (args: { doc: Page }) => Metadata | Promise<Metadata>,
+        metadata: (args: { doc: Page, params: Awaited<Params>, searchParams: Awaited<SearchParams> }) => Metadata | Promise<Metadata>,
     }
 }

@@ -398,6 +398,46 @@ export interface Blog {
     };
     [k: string]: unknown;
   } | null;
+  /**
+   * SEO your page here.
+   */
+  meta: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * The Web page keywords for search.
+     */
+    keywords?: string[] | null;
+    ldSchema_references?:
+      | {
+          relationTo: 'structured_schemas';
+          value: number | StructuredSchema;
+        }[]
+      | null;
+    /**
+     * Enabling this allows Google and other search engines to show this page in search results.
+     */
+    index: boolean;
+    /**
+     * Enabling this tells search engines to follow the links present on this page to discover other pages.
+     */
+    follow: boolean;
+    /**
+     * Enable Sitemap of the page.
+     */
+    enableSitemap: boolean;
+    changeFrequency?: ('yearly' | 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'never') | null;
+    priority?: number | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -423,6 +463,46 @@ export interface Changelog {
     };
     [k: string]: unknown;
   };
+  /**
+   * SEO your page here.
+   */
+  meta: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    /**
+     * The Web page keywords for search.
+     */
+    keywords?: string[] | null;
+    ldSchema_references?:
+      | {
+          relationTo: 'structured_schemas';
+          value: number | StructuredSchema;
+        }[]
+      | null;
+    /**
+     * Enabling this allows Google and other search engines to show this page in search results.
+     */
+    index: boolean;
+    /**
+     * Enabling this tells search engines to follow the links present on this page to discover other pages.
+     */
+    follow: boolean;
+    /**
+     * Enable Sitemap of the page.
+     */
+    enableSitemap: boolean;
+    changeFrequency?: ('yearly' | 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'never') | null;
+    priority?: number | null;
+  };
+  /**
+   * When enabled, the slug will auto-generate from the title field on save and autosave.
+   */
+  generateSlug?: boolean | null;
+  slug: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -591,6 +671,22 @@ export interface PagesSelect<T extends boolean = true> {
 export interface BlogsSelect<T extends boolean = true> {
   title?: T;
   textContent?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        keywords?: T;
+        ldSchema_references?: T;
+        index?: T;
+        follow?: T;
+        enableSitemap?: T;
+        changeFrequency?: T;
+        priority?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -611,6 +707,22 @@ export interface StructuredSchemasSelect<T extends boolean = true> {
 export interface ChangelogsSelect<T extends boolean = true> {
   title?: T;
   changes?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        keywords?: T;
+        ldSchema_references?: T;
+        index?: T;
+        follow?: T;
+        enableSitemap?: T;
+        changeFrequency?: T;
+        priority?: T;
+      };
+  generateSlug?: T;
+  slug?: T;
   updatedAt?: T;
   createdAt?: T;
 }

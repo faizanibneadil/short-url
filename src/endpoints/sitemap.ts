@@ -4,14 +4,19 @@ import { MetadataRoute } from "next";
 import { Endpoint } from "payload";
 import { EnumChangefreq, ErrorLevel, SitemapItemLoose, SitemapStream, streamToPromise } from 'sitemap';
 
-export const Sitemap: Endpoint = {
+export type SitemapEndpointType = (config: {
+    collectionSlug: AppCollectionSlug
+}) => Endpoint
+export const generateSitemap: SitemapEndpointType = ({
+    collectionSlug
+}) => ({
     handler: async (req) => {
         // const collectionSlug = req?.routeParams?.collectionSlug as AppCollectionSlug
         // console.log(collectionSlug, "collectionSlug")
         const sitemap: SitemapItemLoose[] = []
 
         const pages = await req.payload.find({
-            collection: 'pages',
+            collection: collectionSlug,
             pagination: false,
             draft: false,
             overrideAccess: true,
@@ -19,10 +24,14 @@ export const Sitemap: Endpoint = {
             trash: false,
         })
 
+        if (pages.docs.length === 0) {
+            throw Error(`There is no any item in ${collectionSlug}`)
+        }
+
         for (const doc of (pages.docs ?? [])) {
             if (doc?.meta?.enableSitemap) {
                 sitemap.push({
-                    url: formatCanonicalURL(doc).toString(), // doc?.slug === 'home' ? __baseURL : new URL(`/pages/${doc?.slug}`, __baseURL).toString(),
+                    url: formatCanonicalURL({ doc, collectionSlug }).toString(), // doc?.slug === 'home' ? __baseURL : new URL(`/pages/${doc?.slug}`, __baseURL).toString(),
                     priority: doc?.meta.priority ?? undefined,
                     changefreq: (doc?.meta.changeFrequency as EnumChangefreq) ?? undefined,
                     lastmod: doc?.updatedAt,
@@ -62,4 +71,4 @@ export const Sitemap: Endpoint = {
     },
     path: '/sitemap.xml',
     method: 'get'
-}
+})

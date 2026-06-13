@@ -50,7 +50,7 @@ export async function generateMetadata(props: {
             url: 'https://devslix.com'
         },
         alternates: {
-            canonical: formatCanonicalURL(page)
+            canonical: formatCanonicalURL({ doc: page, collectionSlug: params.collectionSlug })
         },
         robots: {
             index: page?.meta?.index,
