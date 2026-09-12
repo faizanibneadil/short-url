@@ -22,8 +22,8 @@ const _collectionMap: CollectionMapType = {
                 openGraph: {
                     title: doc?.meta?.title || '',
                     description: doc?.meta?.description || '',
-                    url: "https://short.devslix.com",
-                    siteName: "Short by DevSlix",
+                    url: "https://url.devslix.com",
+                    siteName: "URL by DevSlix",
                     type: "website",
                 },
                 metadataBase: new URL(__baseURL),
@@ -67,8 +67,8 @@ const _collectionMap: CollectionMapType = {
                 openGraph: {
                     title: doc?.meta?.title || '',
                     description: doc?.meta?.description || '',
-                    url: "https://short.devslix.com",
-                    siteName: "Short by DevSlix",
+                    url: "https://url.devslix.com",
+                    siteName: "URL by DevSlix",
                     type: "website",
                 },
                 metadataBase: new URL(__baseURL),

@@ -40,8 +40,8 @@ export async function generateMetadata(props: {
         openGraph: {
             title: page?.meta?.title || '',
             description: page?.meta?.description || '',
-            url: "https://short.devslix.com",
-            siteName: "Short by DevSlix",
+            url: "https://url.devslix.com",
+            siteName: "URL by DevSlix",
             type: "website",
         },
         metadataBase: new URL(__baseURL),
