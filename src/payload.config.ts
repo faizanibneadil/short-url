@@ -90,7 +90,7 @@ export default buildConfig({
   plugins: [
     seoPlugin({
       uploadsCollection: 'media',
-      generateTitle: ({ doc }) => `short.devslix.com — ${doc?.meta?.title}`,
+      generateTitle: ({ doc }) => `url.devslix.com — ${doc?.meta?.title}`,
       generateDescription: ({ doc }) => doc?.meta?.description,
       generateURL: ({ doc, collectionSlug }) => {
         if (collectionSlug === 'pages') {

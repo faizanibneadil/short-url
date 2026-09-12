@@ -5,12 +5,12 @@ import { CollectionBeforeValidateHook } from "payload";
 export const beforeValidateHook: CollectionBeforeValidateHook<Url> = ({
     data
 }) => {
-    const URL_ID = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
+    const urlID = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 6)}`
     if (data && !data?.shortURL) {
-        data.shortURL = URL_ID
+        data.shortURL = urlID
     }
     if (data && !data?.shareable_url) {
-        data.shareable_url = `${getServerSideURL()}/s/${URL_ID}`
+        data.shareable_url = `${getServerSideURL()}/s/${urlID}`
     }
 
     return data
