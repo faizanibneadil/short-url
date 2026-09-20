@@ -5,10 +5,7 @@ import { getPayload } from 'payload'
 
 export const queryGlobals = async ({ slug, depth = 2 }: { slug: keyof Config['globals'], depth?: number }) => {
     const payload = await getPayload({
-        config,
-        onInit: payload => {
-            console.log('Init from Query Globals', slug)
-        }
+        config
     })
 
     const global = await payload.findGlobal({

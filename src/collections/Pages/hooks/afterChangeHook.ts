@@ -13,12 +13,12 @@ export const AfterChangeHook: CollectionAfterChangeHook<Page> = async ({ doc, re
                 : doc?.slug
 
             if (doc?.enableCollection && doc?.configuredCollectionSlug) {
-                const page = await findPageByConfiguredCollection({ req, collectionSlug: doc?.configuredCollectionSlug as AppCollectionSlug })
+                const page = await findPageByConfiguredCollection(req, { collectionSlug: doc?.configuredCollectionSlug as AppCollectionSlug })
                 await req.payload.kv.has(queryKey) && await req.payload.kv.delete(queryKey)
                 page && req.payload.logger.info(`[CACHE HIT]: QueryKey is (${queryKey})`)
                 page && req.payload.kv.set(queryKey, page)
             } else {
-                const page = await findPageBySlug({ req, slug: doc?.slug })
+                const page = await findPageBySlug(req, { slug: doc?.slug })
                 await req.payload.kv.has(queryKey) && await req.payload.kv.delete(queryKey)
                 page && req.payload.logger.info(`[CACHE HIT]: QueryKey is (${queryKey})`)
                 page && req.payload.kv.set(queryKey, page)

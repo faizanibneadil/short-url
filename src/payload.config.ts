@@ -29,13 +29,13 @@ const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
 export default buildConfig({
-  kv: cloudflareKVadapter({
-    cloudflareInstance: new Cloudflare({
-      apiToken: process.env.CLOUDFLARE_API_TOKEN!,
-    }),
-    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
-    cloudflareKvNamespaceId: process.env.CLOUDFLARE_KV_NAMESPACE_ID!
-  }),
+  // kv: cloudflareKVadapter({
+  //   cloudflareInstance: new Cloudflare({
+  //     apiToken: process.env.CLOUDFLARE_API_TOKEN!,
+  //   }),
+  //   cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
+  //   cloudflareKvNamespaceId: process.env.CLOUDFLARE_KV_NAMESPACE_ID!
+  // }),
   admin: {
     user: Users.slug,
     importMap: {
@@ -104,6 +104,6 @@ export default buildConfig({
     })
   ],
   onInit: async payload => {
-    await InitializePagesCache({ payload })
+    // await InitializePagesCache({ payload })
   }
 })

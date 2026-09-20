@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import { notFound } from "next/navigation";
 import { getPayload } from "payload";
 import config from '@payload-config'
+import { queryPageBySlug } from "@/utilities/queries/queryPageBySlug";
 
 export async function generateMetadata(props: {
     params: Params,
@@ -19,10 +20,10 @@ export async function generateMetadata(props: {
     const payload = await getPayload({ config })
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
-    const page = await payload.kv.get<Page>(params.slug)
-    // await queryPageBySlug({
-    //     slug: params.slug
-    // })
+    // const page = await payload.kv.get<Page>(params.slug)
+    const page = await queryPageBySlug({
+        slug: params.slug
+    })
 
     if (!page) {
         return {
@@ -72,10 +73,10 @@ export default async function Page(props: {
     const [params, searchParams] = await Promise.all([props.params, props.searchParams])
 
     const payload = await getPayload({ config })
-    const page = await payload.kv.get<Page>(params.slug)
-    // await queryPageBySlug({
-    //     slug: params.slug
-    // })
+    // const page = await payload.kv.get<Page>(params.slug)
+    const page = await queryPageBySlug({
+        slug: params.slug
+    })
 
     if (!page) {
         return notFound()

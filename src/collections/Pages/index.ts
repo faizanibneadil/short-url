@@ -241,6 +241,6 @@ export const Pages: CollectionConfig<'pages'> = {
         },
     ],
     hooks: {
-        afterChange: [AfterChangeHook]
+        // afterChange: [AfterChangeHook]
     }
 }

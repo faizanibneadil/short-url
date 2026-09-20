@@ -9,6 +9,7 @@ import dynamic from "next/dynamic"
 import { notFound } from "next/navigation"
 import config from '@payload-config'
 import { getPayload } from "payload"
+import { queryPageByConfiguredCollection } from "@/utilities/queries/queryPageByConfiguiredCollection"
 
 
 const _collectionMap: CollectionMapType = {
@@ -107,10 +108,10 @@ export const generateMetadata = async (props: {
         }
     }
 
-    const page = await payload.kv.get<Page>(params.collectionSlug)
-    // const page = await queryPageByConfiguredCollection({
-    //     collectionSlug: params.collectionSlug
-    // })
+    // const page = await payload.kv.get<Page>(params.collectionSlug)
+    const page = await queryPageByConfiguredCollection({
+        collectionSlug: params.collectionSlug
+    })
 
     if (params.collectionSlug in _collectionMap) {
         const metadata = _collectionMap?.[params.collectionSlug]?.metadata
@@ -136,10 +137,10 @@ export default async function Page(props: {
         return notFound()
     }
 
-    const page = await payload.kv.get<Page>(params.collectionSlug)
-    // const page = await queryPageByConfiguredCollection({
-    //     collectionSlug: params.collectionSlug
-    // })
+    // const page = await payload.kv.get<Page>(params.collectionSlug)
+    const page = await queryPageByConfiguredCollection({
+        collectionSlug: params.collectionSlug
+    })
 
     const collection = await queryCollectionByCollectionSlug({
         collectionSlug: params.collectionSlug

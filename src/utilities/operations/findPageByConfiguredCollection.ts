@@ -1,13 +1,12 @@
 import type { PayloadRequest } from "payload";
 import type { AppCollectionSlug } from "@/types";
 
-export const findPageByConfiguredCollection = async ({
+type Options = {
+    collectionSlug: AppCollectionSlug
+}
+export const findPageByConfiguredCollection = async (req: PayloadRequest, {
     collectionSlug,
-    req
-}: {
-    collectionSlug: AppCollectionSlug,
-    req: PayloadRequest
-}) => {
+}: Options) => {
     const page = await req.payload.find({
         collection: 'pages',
         draft: false,
