@@ -72,8 +72,8 @@ export default buildConfig({
       ]
     }
   }),
-  cors: ['http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
-  csrf: ['http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  cors: ["https://clip.devslix.com", 'http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
+  csrf: ["https://clip.devslix.com", 'http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
   serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
   db: postgresAdapter({
     blocksAsJSON: true,
