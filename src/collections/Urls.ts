@@ -17,8 +17,8 @@ export const URLs: CollectionConfig<'urls'> = {
     access: {
         create: () => true,
         read: () => true,
-        update: ({ req }) => Boolean(req.user),
-        delete: ({ req }) => Boolean(req.user),
+        update: ({ req }) => true,
+        delete: ({ req }) => true,
     },
 
     fields: [
