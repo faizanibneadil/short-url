@@ -375,6 +375,15 @@ export interface Url {
    */
   shortURL?: string | null;
   shareable_url?: string | null;
+  urlState?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -651,6 +660,7 @@ export interface UrlsSelect<T extends boolean = true> {
   longURL?: T;
   shortURL?: T;
   shareable_url?: T;
+  urlState?: T;
   updatedAt?: T;
   createdAt?: T;
 }
