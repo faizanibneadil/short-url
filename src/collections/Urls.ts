@@ -87,6 +87,10 @@ export const URLs: CollectionConfig<'urls'> = {
                 readOnly: true,
                 disabled: true
             }
+        },
+        {
+            type: "json",
+            name: "urlState",
         }
     ],
 
