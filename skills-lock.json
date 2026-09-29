@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "ai-seo": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/ai-seo/SKILL.md",
+      "computedHash": "2b2dc6fe6156b9338e1b181670b1c3e2b215d980327f3bbd5aff9d069decd56d"
+    },
+    "clean-code": {
+      "source": "sickn33/agentic-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/clean-code/SKILL.md",
+      "computedHash": "5dc34cc80c81f909fa69923bfdaa90b6579f3b9842e059be9c2378483605a00f"
+    },
+    "react-code-review": {
+      "source": "giuseppe-trisciuoglio/developer-kit",
+      "sourceType": "github",
+      "skillPath": "plugins/developer-kit-typescript/skills/react-code-review/SKILL.md",
+      "computedHash": "3a6ca3a1755850a7d1de17314ecd431be724fe85ad33ef2ac2bbfe658244414a"
+    },
+    "seo": {
+      "source": "addyosmani/web-quality-skills",
+      "sourceType": "github",
+      "skillPath": "skills/seo/SKILL.md",
+      "computedHash": "01a735ac18ceb15536ac40b11a5712b3ab8f78ebe94748b3ebc3afc7f58a6f2f"
+    },
+    "shadcn": {
+      "source": "shadcn-ui/ui",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "f615de216e085a84e31593ad0fa9062232adc40cd87b7c7ab2b8e49abf6500be"
+    }
+  }
+}
