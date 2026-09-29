@@ -1,15 +1,12 @@
 "use client";
+
 import { motion, useReducedMotion } from "motion/react";
 import type React from "react";
 import type { ReactNode } from "react";
-// import { Logo } from "@/components/logo";
-import { Button } from "@/components/ui/button";
 import { DataFromGlobalSlug } from "payload";
 import Link from "next/link";
 import { formatHref } from "@/utilities/formatHref";
-import Image from "next/image";
-import { getMediaUrl } from "@/utilities/getURL";
-// import { FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from "lucide-react";
+import { Link2 } from "lucide-react";
 
 type FooterLink = {
     title: string;
@@ -21,84 +18,98 @@ type FooterLinkGroup = {
     links: FooterLink[];
 };
 
-export function StickyFooter(props: { footerProps: DataFromGlobalSlug<'footer'> }) {
+export function StickyFooter(props: { footerProps?: DataFromGlobalSlug<'footer'> }) {
     const {
         footerProps
-    } = props
+    } = props || {}
 
     const {
-        id,
-        createdAt,
-        logo,
         menus,
-        updatedAt,
         slogan
-    } = footerProps
+    } = footerProps || {}
 
     return (
-        <footer
-            className="relative h-(--footer-height) w-full border-t [--footer-height:520px] font-(family-name:--font-outfit)"
-            style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
-        >
-            <div className="fixed bottom-0 h-(--footer-height) w-full">
-                <div className="sticky top-[calc(100vh-var(--footer-height))] h-full overflow-y-auto">
-                    {/* <div
-                        aria-hidden
-                        className="absolute inset-0 isolate z-0 opacity-50 contain-strict dark:opacity-60"
-                    >
-                        <div className="absolute top-0 left-0 h-320 w-140 -translate-y-87.5 -rotate-45 rounded-full bg-[radial-gradient(68.54%_68.72%_at_55.02%_31.46%,--theme(--color-foreground/.06)_0,hsla(0,0%,55%,.02)_50%,--theme(--color-foreground/.01)_80%)]" />
-                        <div className="absolute top-0 left-0 h-320 w-60 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,--theme(--color-foreground/.04)_0,--theme(--color-foreground/.01)_80%,transparent_100%)] [translate:5%_-50%]" />
-                        <div className="absolute top-0 left-0 h-320 w-60 -translate-y-87.5 -rotate-45 rounded-full bg-[radial-gradient(50%_50%_at_50%_50%,--theme(--color-foreground/.04)_0,--theme(--color-foreground/.01)_80%,transparent_100%)]" />
-                    </div> */}
-                    <div className="relative mx-auto flex size-full max-w-6xl flex-col justify-between gap-5">
-                        <div className="grid grid-cols-1 gap-8 px-4 pt-12 md:grid-cols-2 lg:grid-cols-4">
-                            <AnimatedContainer className="w-full space-y-4">
-                                {/* <Logo className="h-5" /> */}
-                                <p>Short By DevSlix</p>
-                                {/* <Image alt="Short By DevSlix" width={20} height={20} src={getMediaUrl(logo?.value)} /> */}
-                                <p className="mt-8 text-muted-foreground text-sm md:mt-0">
-                                    {slogan}
-                                </p>
-                                <div className="flex gap-2">
-                                    <Button size="icon-sm" variant="outline" render={<a href='#' />} nativeButton={false}>FB</Button>
-                                    {/* {socialLinks.map((link, index) => (
-                                        <Button key={`social-${link.href}-${index}`} size="icon-sm" variant="outline" render={<a href={link.href} />} nativeButton={false}>{link.icon}</Button>
-                                    ))} */}
+        <footer className="w-full border-t border-border/50 bg-card/50 backdrop-blur-md font-(family-name:--font-outfit) mt-auto">
+            <div className="max-w-6xl mx-auto px-4 py-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
+                    {/* Brand column */}
+                    <div className="lg:col-span-2 space-y-4">
+                        <Link href="/" className="flex items-center gap-2.5 group">
+                            <div className="size-8 rounded-lg bg-gradient-to-br from-primary via-indigo-500 to-purple-600 p-0.5 shadow-md shadow-primary/20">
+                                <div className="size-full bg-background rounded-[6px] flex items-center justify-center">
+                                    <Link2 className="size-3.5 text-primary" />
+                                </div>
+                            </div>
+                            <span className="font-extrabold text-base tracking-tight">
+                                url<span className="text-primary">.devslix</span>
+                            </span>
+                        </Link>
+                        <p className="text-sm text-muted-foreground leading-relaxed max-w-sm">
+                            {slogan || "Production-grade URL shortener built with Next.js and Payload CMS. Fast, secure, and reliable link infrastructure."}
+                        </p>
+                    </div>
+
+                    {/* Menus from CMS or Fallback */}
+                    {menus && menus.length > 0 ? (
+                        menus.map((menu, index) => (
+                            <AnimatedContainer delay={0.1 + index * 0.1} key={menu?.label || index}>
+                                <div>
+                                    <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
+                                        {menu?.label}
+                                    </h3>
+                                    <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                        {menu?.links?.map((link) => (
+                                            <li key={link?.id}>
+                                                <Link
+                                                    className="hover:text-primary transition-colors"
+                                                    href={formatHref(link)}
+                                                >
+                                                    {link?.label}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </AnimatedContainer>
-                            {menus?.map((menu, index) => (
-                                <AnimatedContainer
-                                    className="w-full"
-                                    delay={0.1 + index * 0.1}
-                                    key={menu?.label}
-                                >
-                                    <div className="mb-10 md:mb-0">
-                                        <h3 className="text-sm uppercase">{menu?.label}</h3>
-                                        <ul className="mt-4 space-y-2 text-muted-foreground text-sm md:text-xs lg:text-sm">
-                                            {menu?.links?.map((link) => (
-                                                <li key={link?.id}>
-                                                    <Link
-                                                        className="inline-flex items-center hover:text-foreground [&_svg]:me-1 [&_svg]:size-4"
-                                                        href={formatHref(link)}
-                                                    >
-                                                        {/* {link.icon} */}
-                                                        {link?.label}
-                                                    </Link>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </AnimatedContainer>
-                            ))}
-                        </div>
-                        <div className="flex flex-col items-center justify-between gap-2 border-t p-4 text-muted-foreground text-sm md:flex-row">
-                            <p>
-                                &copy; {new Date().getFullYear()} DevSlix, All rights reserved.
-                            </p>
-                            <a className="hover:text-foreground" href="#">
-                                License
-                            </a>
-                        </div>
+                        ))
+                    ) : (
+                        footerLinkGroups.map((group, index) => (
+                            <AnimatedContainer delay={0.1 + index * 0.1} key={group.label}>
+                                <div>
+                                    <h3 className="text-xs font-bold uppercase tracking-wider text-foreground mb-4">
+                                        {group.label}
+                                    </h3>
+                                    <ul className="space-y-2.5 text-sm text-muted-foreground">
+                                        {group.links.map((link) => (
+                                            <li key={link.title}>
+                                                <Link
+                                                    className="hover:text-primary transition-colors"
+                                                    href={link.href}
+                                                >
+                                                    {link.title}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            </AnimatedContainer>
+                        ))
+                    )}
+                </div>
+
+                {/* Bottom Bar */}
+                <div className="pt-8 border-t border-border/40 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
+                    <p>&copy; {new Date().getFullYear()} DevSlix. All rights reserved.</p>
+                    <div className="flex items-center gap-6">
+                        <Link href="#" className="hover:text-foreground transition-colors">
+                            Privacy Policy
+                        </Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">
+                            Terms of Service
+                        </Link>
+                        <Link href="#" className="hover:text-foreground transition-colors">
+                            Security
+                        </Link>
                     </div>
                 </div>
             </div>
@@ -106,93 +117,31 @@ export function StickyFooter(props: { footerProps: DataFromGlobalSlug<'footer'> 
     );
 }
 
-// const socialLinks = [
-//     {
-//         title: "Facebook",
-//         href: "#",
-//         icon: (
-//             <FacebookIcon
-//             />
-//         ),
-//     },
-//     {
-//         title: "Instagram",
-//         href: "#",
-//         icon: (
-//             <InstagramIcon
-//             />
-//         ),
-//     },
-//     {
-//         title: "Youtube",
-//         href: "#",
-//         icon: (
-//             <YoutubeIcon
-//             />
-//         ),
-//     },
-//     {
-//         title: "LinkedIn",
-//         href: "#",
-//         icon: (
-//             <LinkedinIcon
-//             />
-//         ),
-//     },
-// ];
-
 const footerLinkGroups: FooterLinkGroup[] = [
     {
         label: "Product",
         links: [
-            { title: "Payments", href: "#" },
-            { title: "Cards & Issuing", href: "#" },
-            { title: "Lending & Credit", href: "#" },
-            { title: "Wealth Management", href: "#" },
-            { title: "Insurance", href: "#" },
-            { title: "Crypto Wallets", href: "#" },
-            { title: "Treasury Management", href: "#" },
-            { title: "Merchant Services", href: "#" },
-            { title: "Point of Sale", href: "#" },
-            { title: "Embedded Finance", href: "#" },
-            { title: "Open Banking API", href: "#" },
-            { title: "SDKs & Integrations", href: "#" },
-            { title: "Pricing", href: "/pricing" },
+            { title: "URL Shortener", href: "#shorten" },
+            { title: "Analytics", href: "#features" },
+            { title: "REST API", href: "#api" },
+            { title: "Enterprise SLA", href: "#features" },
         ],
     },
     {
         label: "Resources",
         links: [
-            { title: "Blog", href: "#" },
-            { title: "Case Studies", href: "#" },
-            { title: "Documentation", href: "#" },
-            { title: "API Reference", href: "#" },
-            { title: "Developer Tools", href: "#" },
-            { title: "Whitepapers", href: "#" },
-            { title: "Reports & Research", href: "#" },
-            { title: "Events & Webinars", href: "#" },
-            { title: "E-books", href: "#" },
-            { title: "Community Forum", href: "#" },
-            { title: "Release Notes", href: "#" },
-            { title: "System Status", href: "#" },
+            { title: "Documentation", href: "#api" },
+            { title: "API Reference", href: "#api" },
+            { title: "System Status", href: "https://url.devslix.com" },
+            { title: "GitHub Repo", href: "https://github.com/devslix" },
         ],
     },
     {
         label: "Company",
         links: [
-            { title: "About Us", href: "#" },
-            { title: "Leadership", href: "#" },
-            { title: "Careers", href: "#" },
-            { title: "Press", href: "#" },
-            { title: "Sustainability", href: "#" },
-            { title: "Diversity & Inclusion", href: "#" },
-            { title: "Investor Relations", href: "#" },
-            { title: "Partners", href: "#" },
+            { title: "About DevSlix", href: "https://devslix.com" },
+            { title: "Contact Support", href: "https://devslix.com" },
             { title: "Legal & Compliance", href: "#" },
-            { title: "Privacy Policy", href: "#" },
-            { title: "Cookie Policy", href: "#" },
-            { title: "Terms of Service", href: "#" },
-            { title: "AML & KYC Policy", href: "#" },
         ],
     },
 ];
@@ -215,10 +164,10 @@ function AnimatedContainer({
 
     return (
         <motion.div
-            initial={{ filter: "blur(4px)", translateY: -8, opacity: 0 }}
-            transition={{ delay, duration: 0.8 }}
+            initial={{ opacity: 0, y: 8 }}
+            transition={{ delay, duration: 0.5 }}
             viewport={{ once: true }}
-            whileInView={{ filter: "blur(0px)", translateY: 0, opacity: 1 }}
+            whileInView={{ opacity: 1, y: 0 }}
             {...props}
         >
             {children}
