@@ -17,7 +17,8 @@ import {
   QrCode,
   SlidersHorizontal,
 } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export default async function HomePage(props: {
   params: Params
@@ -285,21 +286,18 @@ export default async function HomePage(props: {
               </li>
             </ul>
 
-            <Button
-              size="lg"
-              className="rounded-xl font-bold gap-2"
-              render={
-                <a
-                  href="https://github.com/devslix"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Code2 className="size-4" />
-                  <span>Explore Developer Docs</span>
-                </a>
-              }
-              nativeButton={false}
-            />
+            <a
+              href="https://github.com/devslix"
+              target="_blank"
+              rel="noreferrer"
+              className={cn(
+                buttonVariants({ variant: "default", size: "lg" }),
+                "rounded-xl font-bold gap-2 flex items-center justify-center"
+              )}
+            >
+              <Code2 className="size-4" />
+              <span>Explore Developer Docs</span>
+            </a>
           </div>
 
           {/* Code snippet display */}
@@ -341,17 +339,16 @@ console.log(data.doc.shortURL);
             Start shortening URLs instantly with our production-grade platform. Fast, reliable, and completely free.
           </p>
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 relative z-10">
-            <Button
-              size="lg"
-              className="bg-white text-zinc-950 hover:bg-white/90 rounded-full font-bold px-8 shadow-lg"
-              render={
-                <a href="#shorten" className="flex items-center gap-2">
-                  <span>Get Started Now</span>
-                  <ArrowRight className="size-4" />
-                </a>
-              }
-              nativeButton={false}
-            />
+            <a
+              href="#shorten"
+              className={cn(
+                buttonVariants({ variant: "default", size: "lg" }),
+                "bg-white text-zinc-950 hover:bg-white/90 rounded-full font-bold px-8 shadow-lg flex items-center justify-center gap-2"
+              )}
+            >
+              <span>Get Started Now</span>
+              <ArrowRight className="size-4" />
+            </a>
           </div>
         </div>
       </section>

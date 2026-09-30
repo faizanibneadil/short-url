@@ -2,7 +2,8 @@ import React from "react"
 import Link from "next/link"
 import { DataFromGlobalSlug } from "payload"
 import { Link2, Sparkles } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 export const Header: React.FC<{ headerProps?: DataFromGlobalSlug<"header"> }> = () => {
   return (
@@ -58,17 +59,16 @@ export const Header: React.FC<{ headerProps?: DataFromGlobalSlug<"header"> }> = 
             <span>GitHub</span>
           </Link>
 
-          <Button
-            size="sm"
-            className="rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-4 shadow-sm shadow-primary/25"
-            render={
-              <a href="#shorten" className="flex items-center gap-1.5">
-                <span>Shorten URL</span>
-                <Sparkles className="size-3.5" />
-              </a>
-            }
-            nativeButton={false}
-          />
+          <Link
+            href="#shorten"
+            className={cn(
+              buttonVariants({ variant: "default", size: "sm" }),
+              "rounded-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-4 shadow-sm shadow-primary/25 flex items-center gap-1.5"
+            )}
+          >
+            <span>Shorten URL</span>
+            <Sparkles className="size-3.5" />
+          </Link>
         </div>
       </div>
     </header>
