@@ -1,1 +1,0 @@
-[] kabhi kabhi pages me 404 ka error ata he like jab koi or page se user home pr ata he to 404 ka error ata he but kabhi kabhi

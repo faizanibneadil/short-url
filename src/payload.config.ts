@@ -42,6 +42,9 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  auth: {
+    passwordHashIterations: 100000
+  },
   collections: [Users, Media, URLs, Pages, Blogs, StructuredSchemas, Changelogs],
   globals: [Header, Footer, Settings],
   secret: process.env.PAYLOAD_SECRET || '',
