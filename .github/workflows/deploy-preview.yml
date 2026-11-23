@@ -83,9 +83,19 @@ jobs:
           if [ -z "$subdomain" ]; then
             echo "::error::Could not read the account's workers.dev subdomain from the Cloudflare API"
             printf '%s' "$response" | jq '{success, errors, messages}' || printf '%s\n' "$response"
-            # Verify the token itself, to tell a bad token apart from a missing permission
+            # Diagnostics (never prints the secret values themselves)
+            echo "--- secret format checks ---"
+            echo "token length: ${#CLOUDFLARE_API_TOKEN}"
+            [[ "$CLOUDFLARE_API_TOKEN" =~ [[:space:]] ]] && echo "token contains whitespace/newline: YES (remove it)" || echo "token contains whitespace/newline: no"
+            [[ "$CLOUDFLARE_API_TOKEN" == Bearer* || "$CLOUDFLARE_API_TOKEN" == bearer* ]] && echo "token starts with 'Bearer': YES (remove it)" || echo "token starts with 'Bearer': no"
+            echo "account id length: ${#CLOUDFLARE_ACCOUNT_ID} (expected 32)"
+            [[ "$CLOUDFLARE_ACCOUNT_ID" =~ ^[0-9a-f]{32}$ ]] && echo "account id format: ok" || echo "account id format: INVALID (must be 32 lowercase hex chars, no spaces)"
+            echo "--- user token verify ---"
             curl -sS "https://api.cloudflare.com/client/v4/user/tokens/verify" \
-              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq '{success, errors, status: .result.status}' || true
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -c '{success, errors, status: .result.status}' || true
+            echo "--- account token verify (for account-owned tokens) ---"
+            curl -sS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -c '{success, errors, status: .result.status}' || true
             exit 1
           fi
 
