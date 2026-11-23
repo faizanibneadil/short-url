@@ -48,3 +48,8 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# OpenNext / Wrangler
+.open-next
+.wrangler
+.dev.vars*

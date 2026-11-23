@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
       hostname: 'https://url.devslix.com'
     }]
   },
+  // Packages with Cloudflare Workers (workerd) specific code
+  // Read more: https://opennext.js.org/cloudflare/howtos/workerd
+  serverExternalPackages: ['jose', 'pg-cloudflare'],
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],
