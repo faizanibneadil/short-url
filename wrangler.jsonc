@@ -32,17 +32,15 @@
   "d1_databases": [
     {
       "binding": "D1",
-      // TODO: replace with the PRODUCTION D1 database name + id
-      "database_id": "00000000-0000-0000-0000-000000000001",
-      "database_name": "replace-me-prod-d1",
+      "database_id": "6a7627db-2ac7-42ee-b061-b2130fb76509",
+      "database_name": "url",
       "remote": true,
     },
   ],
   "r2_buckets": [
     {
       "binding": "R2",
-      // TODO: replace with the PRODUCTION R2 bucket name
-      "bucket_name": "replace-me-prod-r2",
+      "bucket_name": "url",
     },
   ],
   "observability": {
@@ -57,17 +55,15 @@
     "d1_databases": [
       {
         "binding": "D1",
-        // TODO: replace with the PREVIEW D1 database name + id
-        "database_id": "00000000-0000-0000-0000-000000000002",
-        "database_name": "replace-me-preview-d1",
+        "database_id": "b99431ea-98e1-4705-941f-991154aa7f01",
+        "database_name": "url-preview",
         "remote": true,
       },
     ],
     "r2_buckets": [
       {
         "binding": "R2",
-        // TODO: replace with the PREVIEW R2 bucket name
-        "bucket_name": "replace-me-preview-r2",
+        "bucket_name": "url-preview",
       },
     ],
     "observability": {

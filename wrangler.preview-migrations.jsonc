@@ -10,15 +10,15 @@
   "d1_databases": [
     {
       "binding": "D1",
-      "database_id": "00000000-0000-0000-0000-000000000002",
-      "database_name": "replace-me-preview-d1",
+      "database_id": "b99431ea-98e1-4705-941f-991154aa7f01",
+      "database_name": "url-preview",
       "remote": true,
     },
   ],
   "r2_buckets": [
     {
       "binding": "R2",
-      "bucket_name": "replace-me-preview-r2",
+      "bucket_name": "url-preview",
     },
   ],
 }

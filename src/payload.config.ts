@@ -74,6 +74,21 @@ const cloudflare =
     ? await getCloudflareContextFromWrangler()
     : await getCloudflareContext({ async: true })
 
+// Production: https://url.devslix.com (set by CI). Previews: their own Preview URL (set by CI).
+// Local dev: NEXT_PUBLIC_SERVER_URL from .env, falling back to http://localhost:3000
+const serverURL = getServerSideURL()
+
+// Payload matches CORS / CSRF origins exactly (no wildcards), so every origin is listed explicitly.
+const allowedOrigins = [
+  'https://url.devslix.com',
+  'https://clip.devslix.com',
+  'https://playground.devslix.com',
+  'https://parchi.devslix.com',
+  'https://www.parchi.devslix.com',
+  ...(isProduction ? [] : ['http://localhost:3000']),
+  serverURL,
+].filter((origin, index, list) => Boolean(origin) && list.indexOf(origin) === index)
+
 export default buildConfig({
   // kv: cloudflareKVadapter({
   //   cloudflareInstance: new Cloudflare({
@@ -121,9 +136,9 @@ export default buildConfig({
       ]
     }
   }),
-  cors: ["https://clip.devslix.com", 'http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', "*.devslix.com", "*.pages.dev", process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
-  csrf: ["https://clip.devslix.com", 'http://localhost:3000', "https://playground.devslix.com", 'https://parchi.devslix.com', 'https://www.parchi.devslix.com', "*.devslix.com", "*.pages.dev", process.env.NEXT_PUBLIC_SERVER_URL!].filter(Boolean),
-  serverURL: process.env.NEXT_PUBLIC_SERVER_URL,
+  cors: allowedOrigins,
+  csrf: allowedOrigins,
+  serverURL,
   db: sqliteD1Adapter({
     binding: cloudflare.env.D1,
     blocksAsJSON: true,

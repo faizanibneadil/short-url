@@ -25,7 +25,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [{
       hostname: 'localhost'
     }, {
-      hostname: 'https://url.devslix.com'
+      hostname: 'url.devslix.com'
     }]
   },
   // Packages with Cloudflare Workers (workerd) specific code
