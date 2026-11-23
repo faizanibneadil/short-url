@@ -77,35 +77,24 @@ jobs:
           [[ "$name" =~ ^[a-z] ]] || name="b-$name"
           name=$(printf '%s' "${name:0:$max}" | sed -E 's/-+$//')
 
+          # The workers.dev subdomain is only used to know the Preview URL before building.
+          # If the lookup fails we still deploy, then rebuild once with the URL Wrangler reports.
           response=$(curl -sS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
-          subdomain=$(printf '%s' "$response" | jq -r '.result.subdomain // empty')
-          if [ -z "$subdomain" ]; then
-            echo "::error::Could not read the account's workers.dev subdomain from the Cloudflare API"
-            printf '%s' "$response" | jq '{success, errors, messages}' || printf '%s\n' "$response"
-            # Diagnostics (never prints the secret values themselves)
-            echo "--- secret format checks ---"
-            echo "token length: ${#CLOUDFLARE_API_TOKEN}"
-            [[ "$CLOUDFLARE_API_TOKEN" =~ [[:space:]] ]] && echo "token contains whitespace/newline: YES (remove it)" || echo "token contains whitespace/newline: no"
-            [[ "$CLOUDFLARE_API_TOKEN" == Bearer* || "$CLOUDFLARE_API_TOKEN" == bearer* ]] && echo "token starts with 'Bearer': YES (remove it)" || echo "token starts with 'Bearer': no"
-            echo "account id length: ${#CLOUDFLARE_ACCOUNT_ID} (expected 32)"
-            [[ "$CLOUDFLARE_ACCOUNT_ID" =~ ^[0-9a-f]{32}$ ]] && echo "account id format: ok" || echo "account id format: INVALID (must be 32 lowercase hex chars, no spaces)"
-            echo "--- user token verify ---"
-            curl -sS "https://api.cloudflare.com/client/v4/user/tokens/verify" \
-              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -c '{success, errors, status: .result.status}' || true
-            echo "--- account token verify (for account-owned tokens) ---"
-            curl -sS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/tokens/verify" \
-              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -c '{success, errors, status: .result.status}' || true
-            exit 1
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" || true)
+          subdomain=$(printf '%s' "$response" | jq -r '.result.subdomain // empty' 2>/dev/null || true)
+          url=""
+          if [ -n "$subdomain" ]; then
+            url="https://${name}-${WORKER_NAME}.${subdomain}.workers.dev"
+            # Next.js inlines NEXT_PUBLIC_* at build time
+            echo "NEXT_PUBLIC_SERVER_URL=$url" >> "$GITHUB_ENV"
+          else
+            echo "::warning::Could not read the workers.dev subdomain (the API token may lack permission for it). The Preview URL will be taken from Wrangler and the app rebuilt with it."
+            printf '%s' "$response" | jq -c '{success, errors}' 2>/dev/null || true
           fi
-
-          url="https://${name}-${WORKER_NAME}.${subdomain}.workers.dev"
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "url=$url" >> "$GITHUB_OUTPUT"
-          # Next.js inlines NEXT_PUBLIC_* at build time
-          echo "NEXT_PUBLIC_SERVER_URL=$url" >> "$GITHUB_ENV"
           echo "Preview name: $name"
-          echo "Preview URL:  $url"
+          echo "Expected Preview URL: ${url:-unknown}"
 
       # Runs Payload migrations against the PREVIEW D1 database
       - name: Migrate preview D1
@@ -123,26 +112,38 @@ jobs:
           set -o pipefail
           secrets_file="$RUNNER_TEMP/worker-secrets.json"
           jq -n --arg s "$PAYLOAD_SECRET" '{PAYLOAD_SECRET: $s}' > "$secrets_file"
-          output="$(pnpm exec wrangler preview --name "$PREVIEW_NAME" --json \
-            --secrets-file "$secrets_file" \
-            --message "${GITHUB_SHA::7} ${GITHUB_REF_NAME}")"
-          rm -f "$secrets_file"
-          printf '%s\n' "$output"
+          trap 'rm -f "$secrets_file"' EXIT
 
-          url="$(printf '%s' "$output" | jq -r '.preview.urls[0] // empty')"
+          deploy_preview() {
+            pnpm exec wrangler preview --name "$PREVIEW_NAME" --json \
+              --secrets-file "$secrets_file" \
+              --message "${GITHUB_SHA::7} ${GITHUB_REF_NAME}"
+          }
+
+          output="$(deploy_preview)"
+          printf '%s\n' "$output"
+          url="$(printf '%s' "$output" | jq -r '.preview.urls[0] // empty' | sed 's#/$##')"
+
           if [ -z "$url" ]; then
             echo "::warning::Wrangler did not return a Preview URL. Enable 'Preview' under Worker URL on the Worker's Domains tab in the Cloudflare dashboard."
             url="$EXPECTED_URL"
-          elif [ "${url%/}" != "$EXPECTED_URL" ]; then
-            echo "::warning::Preview URL ($url) differs from the URL used at build time ($EXPECTED_URL)."
+          elif [ "$url" != "$EXPECTED_URL" ]; then
+            # The app was built without (or with a different) URL: rebuild with the real one so
+            # Payload's serverURL / CORS / CSRF match the Preview URL, then deploy again.
+            echo "Rebuilding with NEXT_PUBLIC_SERVER_URL=$url"
+            export NEXT_PUBLIC_SERVER_URL="$url"
+            pnpm exec opennextjs-cloudflare build
+            output="$(deploy_preview)"
+            printf '%s\n' "$output"
           fi
+
           echo "url=$url" >> "$GITHUB_OUTPUT"
           {
             echo "### 🚀 Preview deployed"
             echo ""
             echo "| Branch | Preview URL |"
             echo "| --- | --- |"
-            echo "| \`$GITHUB_REF_NAME\` | $url |"
+            echo "| \`$GITHUB_REF_NAME\` | ${url:-not available} |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   cleanup:
