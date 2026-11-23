@@ -14,7 +14,9 @@ permissions:
   contents: read
 
 env:
-  WORKER_NAME: short-url
+  WORKER_NAME: url
+  # Previews are served on <preview-name>.url.devslix.com
+  PREVIEW_DOMAIN: url.devslix.com
 
 jobs:
   preview:
@@ -77,20 +79,9 @@ jobs:
           [[ "$name" =~ ^[a-z] ]] || name="b-$name"
           name=$(printf '%s' "${name:0:$max}" | sed -E 's/-+$//')
 
-          # The workers.dev subdomain is only used to know the Preview URL before building.
-          # If the lookup fails we still deploy, then rebuild once with the URL Wrangler reports.
-          response=$(curl -sS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" || true)
-          subdomain=$(printf '%s' "$response" | jq -r '.result.subdomain // empty' 2>/dev/null || true)
-          url=""
-          if [ -n "$subdomain" ]; then
-            url="https://${name}-${WORKER_NAME}.${subdomain}.workers.dev"
-            # Next.js inlines NEXT_PUBLIC_* at build time
-            echo "NEXT_PUBLIC_SERVER_URL=$url" >> "$GITHUB_ENV"
-          else
-            echo "::warning::Could not read the workers.dev subdomain (the API token may lack permission for it). The Preview URL will be taken from Wrangler and the app rebuilt with it."
-            printf '%s' "$response" | jq -c '{success, errors}' 2>/dev/null || true
-          fi
+          url="https://${name}.${PREVIEW_DOMAIN}"
+          # Next.js inlines NEXT_PUBLIC_* at build time
+          echo "NEXT_PUBLIC_SERVER_URL=$url" >> "$GITHUB_ENV"
           echo "name=$name" >> "$GITHUB_OUTPUT"
           echo "url=$url" >> "$GITHUB_OUTPUT"
           echo "Preview name: $name"
@@ -122,13 +113,16 @@ jobs:
 
           output="$(deploy_preview)"
           printf '%s\n' "$output"
-          url="$(printf '%s' "$output" | jq -r '.preview.urls[0] // empty' | sed 's#/$##')"
+          # Prefer the custom domain URL; fall back to the first URL Wrangler reports (workers.dev)
+          url="$(printf '%s' "$output" | jq -r --arg d "$PREVIEW_DOMAIN" \
+            '[.preview.urls[]? | sub("/$"; "")] | (map(select(endswith("." + $d))) + .) | .[0] // empty')"
 
           if [ -z "$url" ]; then
-            echo "::warning::Wrangler did not return a Preview URL. Enable 'Preview' under Worker URL on the Worker's Domains tab in the Cloudflare dashboard."
+            echo "::warning::Wrangler did not return a Preview URL."
             url="$EXPECTED_URL"
           elif [ "$url" != "$EXPECTED_URL" ]; then
-            # The app was built without (or with a different) URL: rebuild with the real one so
+            # Happens until the first production deploy activates <preview>.url.devslix.com.
+            # Rebuild with the URL that actually serves this Preview so
             # Payload's serverURL / CORS / CSRF match the Preview URL, then deploy again.
             echo "Rebuilding with NEXT_PUBLIC_SERVER_URL=$url"
             export NEXT_PUBLIC_SERVER_URL="$url"

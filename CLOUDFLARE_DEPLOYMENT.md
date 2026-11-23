@@ -8,7 +8,7 @@ This app (Payload CMS + Next.js) runs on Cloudflare Workers through
 | --- | --- | --- |
 | Trigger | push to `main` | push to any other branch |
 | Workflow | `.github/workflows/deploy-production.yml` | `.github/workflows/deploy-preview.yml` |
-| URL | https://url.devslix.com | `https://<branch>-short-url.<subdomain>.workers.dev` |
+| URL | https://url.devslix.com | `https://<branch>.url.devslix.com` (until the first production deploy: `https://<branch>-url.<subdomain>.workers.dev`) |
 | D1 / R2 | top-level `d1_databases` / `r2_buckets` in `wrangler.jsonc` | `previews` block in `wrangler.jsonc` (+ `wrangler.preview-migrations.jsonc`) |
 | Payload secret | `PAYLOAD_SECRET` | `PREVIEW_PAYLOAD_SECRET` |
 
@@ -26,7 +26,7 @@ Settings → Secrets and variables → Actions → **New repository secret**
 | `PREVIEW_PAYLOAD_SECRET` | `openssl rand -hex 32` (previews, different from production) |
 
 API token permissions (Account): **Workers Scripts: Edit**, **D1: Edit**, **Workers R2 Storage: Edit**,
-**Account Settings: Read**. Zone `devslix.com`: **Workers Routes: Edit**, **DNS: Edit**, **Zone: Read**.
+**Account Settings: Read**. Zone `devslix.com`: **Workers Routes: Edit**, **DNS: Edit**, **SSL and Certificates: Edit**, **Zone: Read**.
 
 ## Resource IDs
 

@@ -4,7 +4,7 @@
 // see https://developers.cloudflare.com/workers/previews/resources/#d1-migrations
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "short-url",
+  "name": "url",
   "compatibility_date": "2025-08-15",
   "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
   "d1_databases": [

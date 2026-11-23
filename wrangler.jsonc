@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
-  "name": "short-url",
+  "name": "url",
   "compatibility_date": "2025-08-15",
   "compatibility_flags": [
     // Enable Node.js API
@@ -17,14 +17,19 @@
   },
 
   // ───────────────────────── PRODUCTION (main branch) ─────────────────────────
-  // Production is served on the custom domain url.devslix.com
+  // Production is served on url.devslix.com.
+  // previews_enabled: every branch Preview is also served on <preview-name>.url.devslix.com
+  // (Cloudflare creates the *.url.devslix.com DNS record + certificate automatically).
+  // see https://developers.cloudflare.com/workers/previews/custom-domains/
   "routes": [
     {
       "pattern": "url.devslix.com",
       "custom_domain": true,
+      "previews_enabled": true,
     },
   ],
-  // Required for branch Preview URLs: <branch>-short-url.<subdomain>.workers.dev
+  // Fallback Preview URLs on <preview-name>-url.<subdomain>.workers.dev. The custom domain
+  // Preview URLs above only become active after the first production deploy (merge to main).
   "preview_urls": true,
 
   // NOTE: NEXT_PUBLIC_SERVER_URL is inlined by Next.js at BUILD time, so it is set by the
