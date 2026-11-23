@@ -25,9 +25,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [{
       hostname: 'localhost'
     }, {
-      hostname: 'https://url.devslix.com'
+      hostname: 'url.devslix.com'
     }]
   },
+  // Packages with Cloudflare Workers (workerd) specific code
+  // Read more: https://opennext.js.org/cloudflare/howtos/workerd
+  serverExternalPackages: ['jose', 'pg-cloudflare'],
   webpack: (webpackConfig) => {
     webpackConfig.resolve.extensionAlias = {
       '.cjs': ['.cts', '.cjs'],

@@ -1,0 +1,173 @@
+name: Deploy Preview
+
+# Every push to any branch except `main` creates/updates a Worker Preview for that branch.
+# Previews use the PREVIEW D1 + R2 (the "previews" block in wrangler.jsonc), never production.
+# Docs: https://developers.cloudflare.com/workers/previews/
+on:
+  push:
+    branches-ignore: [main]
+  # When a branch is deleted (e.g. after merging), its Preview is deleted too
+  delete:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  WORKER_NAME: url
+  # Previews are served on <preview-name>.url.devslix.com
+  PREVIEW_DOMAIN: url.devslix.com
+
+jobs:
+  preview:
+    name: Deploy Worker Preview
+    if: github.event_name != 'delete'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    # Newer pushes to the same branch replace an in-progress preview deploy.
+    concurrency:
+      group: preview-${{ github.ref_name }}
+      cancel-in-progress: true
+    environment:
+      name: preview
+      url: ${{ steps.preview.outputs.url }}
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PAYLOAD_SECRET: ${{ secrets.PREVIEW_PAYLOAD_SECRET }}
+      # Points the Payload CLI + build at the PREVIEW D1/R2 instead of production
+      PAYLOAD_WRANGLER_CONFIG: wrangler.preview-migrations.jsonc
+      NEXT_TELEMETRY_DISABLED: '1'
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check required secrets
+        run: |
+          for name in CLOUDFLARE_API_TOKEN CLOUDFLARE_ACCOUNT_ID PAYLOAD_SECRET; do
+            if [ -z "${!name}" ]; then
+              [ "$name" = "PAYLOAD_SECRET" ] && name="PREVIEW_PAYLOAD_SECRET"
+              echo "::error::GitHub secret '$name' is not set"
+              exit 1
+            fi
+          done
+
+      # Preview names may only contain lowercase letters, digits and dashes, must start with a
+      # letter, and "<name>-short-url" must fit in a 63 character DNS label.
+      - name: Compute preview name and URL
+        id: meta
+        env:
+          BRANCH: ${{ github.ref_name }}
+        run: |
+          max=$(( 63 - ${#WORKER_NAME} - 1 ))
+          name=$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/-+/-/g; s/^-+//; s/-+$//')
+          [[ "$name" =~ ^[a-z] ]] || name="b-$name"
+          name=$(printf '%s' "${name:0:$max}" | sed -E 's/-+$//')
+
+          url="https://${name}.${PREVIEW_DOMAIN}"
+          # Next.js inlines NEXT_PUBLIC_* at build time
+          echo "NEXT_PUBLIC_SERVER_URL=$url" >> "$GITHUB_ENV"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          echo "Preview name: $name"
+          echo "Expected Preview URL: ${url:-unknown}"
+
+      # Runs Payload migrations against the PREVIEW D1 database
+      - name: Migrate preview D1
+        run: pnpm run deploy:preview:database
+
+      - name: Build (OpenNext)
+        run: pnpm exec opennextjs-cloudflare build
+
+      - name: Deploy Preview
+        id: preview
+        env:
+          PREVIEW_NAME: ${{ steps.meta.outputs.name }}
+          EXPECTED_URL: ${{ steps.meta.outputs.url }}
+        run: |
+          set -o pipefail
+          secrets_file="$RUNNER_TEMP/worker-secrets.json"
+          jq -n --arg s "$PAYLOAD_SECRET" '{PAYLOAD_SECRET: $s}' > "$secrets_file"
+          trap 'rm -f "$secrets_file"' EXIT
+
+          deploy_preview() {
+            pnpm exec wrangler preview --name "$PREVIEW_NAME" --json \
+              --secrets-file "$secrets_file" \
+              --message "${GITHUB_SHA::7} ${GITHUB_REF_NAME}"
+          }
+
+          # Wrangler can print banner/warning lines before the JSON document: keep only the JSON
+          extract_json() { sed -n '/^{/,$p'; }
+
+          output="$(deploy_preview)"
+          printf '%s\n' "$output"
+          json="$(printf '%s\n' "$output" | extract_json)"
+          # Prefer the custom domain URL; fall back to the first URL Wrangler reports (workers.dev)
+          url="$(printf '%s' "$json" | jq -r --arg d "$PREVIEW_DOMAIN" \
+            '[.preview.urls[]? | sub("/$"; "")] | (map(select(endswith("." + $d))) + .) | .[0] // empty')"
+
+          if [ -z "$url" ]; then
+            echo "::warning::Wrangler did not return a Preview URL."
+            url="$EXPECTED_URL"
+          elif [ "$url" != "$EXPECTED_URL" ]; then
+            # Happens until the first production deploy activates <preview>.url.devslix.com.
+            # Rebuild with the URL that actually serves this Preview so
+            # Payload's serverURL / CORS / CSRF match the Preview URL, then deploy again.
+            echo "Rebuilding with NEXT_PUBLIC_SERVER_URL=$url"
+            export NEXT_PUBLIC_SERVER_URL="$url"
+            pnpm exec opennextjs-cloudflare build
+            output="$(deploy_preview)"
+            printf '%s\n' "$output"
+          fi
+
+          echo "url=$url" >> "$GITHUB_OUTPUT"
+          {
+            echo "### 🚀 Preview deployed"
+            echo ""
+            echo "| Branch | Preview URL |"
+            echo "| --- | --- |"
+            echo "| \`$GITHUB_REF_NAME\` | ${url:-not available} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  cleanup:
+    name: Delete Worker Preview
+    if: github.event_name == 'delete' && github.event.ref_type == 'branch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - name: Compute preview name
+        id: meta
+        env:
+          BRANCH: ${{ github.event.ref }}
+        run: |
+          max=$(( 63 - ${#WORKER_NAME} - 1 ))
+          name=$(printf '%s' "$BRANCH" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9-]+/-/g; s/-+/-/g; s/^-+//; s/-+$//')
+          [[ "$name" =~ ^[a-z] ]] || name="b-$name"
+          name=$(printf '%s' "${name:0:$max}" | sed -E 's/-+$//')
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Delete Preview
+        run: |
+          npx --yes wrangler@4.166.0 preview delete \
+            --worker-name "$WORKER_NAME" \
+            --name "${{ steps.meta.outputs.name }}" \
+            --skip-confirmation || echo "::warning::Preview not found or already deleted"

@@ -1,0 +1,24 @@
+// Used ONLY by CI / the Payload CLI to run migrations (and the build) against the
+// PREVIEW D1 + R2 resources. It is never deployed as a Worker.
+// The values below MUST match the "previews" block in wrangler.jsonc.
+// see https://developers.cloudflare.com/workers/previews/resources/#d1-migrations
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "url",
+  "compatibility_date": "2025-08-15",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "d1_databases": [
+    {
+      "binding": "D1",
+      "database_id": "b99431ea-98e1-4705-941f-991154aa7f01",
+      "database_name": "url-preview",
+      "remote": true,
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "url-preview",
+    },
+  ],
+}

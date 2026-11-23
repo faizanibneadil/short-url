@@ -2,17 +2,7 @@ import { Media } from '@/payload-types'
 import { canUseDOM } from './canUseDOM'
 
 export const getServerSideURL = () => {
-  let url = process.env.NEXT_PUBLIC_SERVER_URL
-
-  if (!url && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  }
-
-  if (!url) {
-    url = 'http://localhost:3000'
-  }
-
-  return url
+  return process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 }
 
 export const getClientSideURL = () => {
@@ -22,10 +12,6 @@ export const getClientSideURL = () => {
     const port = window.location.port
 
     return `${protocol}//${domain}${port ? `:${port}` : ''}`
-  }
-
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   }
 
   return process.env.NEXT_PUBLIC_SERVER_URL || ''

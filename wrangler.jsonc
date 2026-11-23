@@ -1,0 +1,78 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "main": ".open-next/worker.js",
+  "name": "url",
+  "compatibility_date": "2025-08-15",
+  "compatibility_flags": [
+    // Enable Node.js API
+    // see https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag
+    "nodejs_compat",
+    // Allow to fetch URLs in your app
+    // see https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
+    "global_fetch_strictly_public",
+  ],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS",
+  },
+
+  // ───────────────────────── PRODUCTION (main branch) ─────────────────────────
+  // Production is served on url.devslix.com.
+  // previews_enabled: every branch Preview is also served on <preview-name>.url.devslix.com
+  // (Cloudflare creates the *.url.devslix.com DNS record + certificate automatically).
+  // see https://developers.cloudflare.com/workers/previews/custom-domains/
+  "routes": [
+    {
+      "pattern": "url.devslix.com",
+      "custom_domain": true,
+      "previews_enabled": true,
+    },
+  ],
+  // Fallback Preview URLs on <preview-name>-url.<subdomain>.workers.dev. The custom domain
+  // Preview URLs above only become active after the first production deploy (merge to main).
+  "preview_urls": true,
+
+  // NOTE: NEXT_PUBLIC_SERVER_URL is inlined by Next.js at BUILD time, so it is set by the
+  // GitHub Actions workflow (production = https://url.devslix.com, previews = their Preview URL).
+  "d1_databases": [
+    {
+      "binding": "D1",
+      "database_id": "6a7627db-2ac7-42ee-b061-b2130fb76509",
+      "database_name": "url",
+      "remote": true,
+    },
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "url",
+    },
+  ],
+  "observability": {
+    "enabled": true,
+  },
+
+  // ───────────────────── PREVIEWS (every non-main branch) ─────────────────────
+  // Previews do not inherit production bindings. They use their own D1 + R2.
+  // see https://developers.cloudflare.com/workers/previews/configuration/
+  // Keep these values in sync with wrangler.preview-migrations.jsonc
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "D1",
+        "database_id": "b99431ea-98e1-4705-941f-991154aa7f01",
+        "database_name": "url-preview",
+        "remote": true,
+      },
+    ],
+    "r2_buckets": [
+      {
+        "binding": "R2",
+        "bucket_name": "url-preview",
+      },
+    ],
+    "observability": {
+      "enabled": true,
+    },
+  },
+}
