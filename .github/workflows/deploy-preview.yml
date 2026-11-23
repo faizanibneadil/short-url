@@ -111,10 +111,14 @@ jobs:
               --message "${GITHUB_SHA::7} ${GITHUB_REF_NAME}"
           }
 
+          # Wrangler can print banner/warning lines before the JSON document: keep only the JSON
+          extract_json() { sed -n '/^{/,$p'; }
+
           output="$(deploy_preview)"
           printf '%s\n' "$output"
+          json="$(printf '%s\n' "$output" | extract_json)"
           # Prefer the custom domain URL; fall back to the first URL Wrangler reports (workers.dev)
-          url="$(printf '%s' "$output" | jq -r --arg d "$PREVIEW_DOMAIN" \
+          url="$(printf '%s' "$json" | jq -r --arg d "$PREVIEW_DOMAIN" \
             '[.preview.urls[]? | sub("/$"; "")] | (map(select(endswith("." + $d))) + .) | .[0] // empty')"
 
           if [ -z "$url" ]; then
