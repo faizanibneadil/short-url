@@ -77,8 +77,17 @@ jobs:
           [[ "$name" =~ ^[a-z] ]] || name="b-$name"
           name=$(printf '%s' "${name:0:$max}" | sed -E 's/-+$//')
 
-          subdomain=$(curl -fsS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
-            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq -er '.result.subdomain')
+          response=$(curl -sS "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/workers/subdomain" \
+            -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN")
+          subdomain=$(printf '%s' "$response" | jq -r '.result.subdomain // empty')
+          if [ -z "$subdomain" ]; then
+            echo "::error::Could not read the account's workers.dev subdomain from the Cloudflare API"
+            printf '%s' "$response" | jq '{success, errors, messages}' || printf '%s\n' "$response"
+            # Verify the token itself, to tell a bad token apart from a missing permission
+            curl -sS "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+              -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" | jq '{success, errors, status: .result.status}' || true
+            exit 1
+          fi
 
           url="https://${name}-${WORKER_NAME}.${subdomain}.workers.dev"
           echo "name=$name" >> "$GITHUB_OUTPUT"
